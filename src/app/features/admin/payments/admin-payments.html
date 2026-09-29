@@ -1,0 +1,125 @@
+<div class="saas-page-head">
+  <div class="saas-page-head__text">
+    <h2>Paiements</h2>
+    <p>Contrôlez les transactions et le taux de réussite des encaissements.</p>
+  </div>
+  <div class="saas-page-head__actions">
+    <span class="saas-badge saas-badge--neutral">{{ payments().length }} transactions</span>
+  </div>
+</div>
+
+<div class="saas-stats">
+  <div class="saas-stat saas-stat--accent">
+    <span class="saas-stat__icon" aria-hidden="true">
+      <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+        <path
+          fill-rule="evenodd"
+          d="M2 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3H2V5Zm0 5h16v5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-5Zm3 6h2v1H5v-1Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </span>
+    <span class="saas-stat__body">
+      <span class="saas-stat__value">{{ succeededTotal() | number: '1.0-0' }} FCFA</span>
+      <span class="saas-stat__label">Encaissé</span>
+      <span class="saas-stat__hint saas-stat__hint--up">{{ succeededCount() }} réussis</span>
+    </span>
+  </div>
+
+  <div class="saas-stat">
+    <span class="saas-stat__icon" aria-hidden="true">
+      <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+        <path
+          d="M10 1a1 1 0 0 1 1 1v1.06A6 6 0 0 1 16.94 9H18a1 1 0 1 1 0 2h-1.06A6 6 0 0 1 11 16.94V18a1 1 0 1 1-2 0v-1.06A6 6 0 0 1 3.06 11H2a1 1 0 1 1 0-2h1.06A6 6 0 0 1 9 3.06V2a1 1 0 0 1 1-1Z"
+        />
+      </svg>
+    </span>
+    <span class="saas-stat__body">
+      <span class="saas-stat__value">{{ successRate() }} %</span>
+      <span class="saas-stat__label">Taux de réussite</span>
+      <span class="saas-stat__hint">{{ failedCount() }} en échec</span>
+    </span>
+  </div>
+</div>
+
+<section class="saas-card">
+  <div class="saas-card__head">
+    <h3>Historique des transactions</h3>
+  </div>
+
+  <div class="saas-card__body saas-card__body--flush">
+    @if (loading()) {
+      <div class="saas-empty">
+        <span class="saas-skeleton" style="width: 180px; height: 12px"></span>
+      </div>
+    } @else if (payments().length === 0) {
+      <div class="saas-empty">
+        <span class="saas-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="22" height="22" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M2 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3H2V5Zm0 5h16v5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-5Zm3 6h2v1H5v-1Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <p class="saas-empty__title">Aucun paiement</p>
+        <p class="saas-empty__text">Les transactions enregistrées apparaîtront ici.</p>
+      </div>
+    } @else {
+      <div class="saas-table-wrap">
+        <table class="saas-table">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Commande</th>
+              <th>Méthode</th>
+              <th class="is-right">Montant</th>
+              <th>Statut</th>
+              <th class="is-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (payment of payments(); track payment.id) {
+              <tr>
+                <td>
+                  <strong class="saas-cell-strong">#{{ shortId(payment.id) }}</strong>
+                  <span class="saas-cell-sub">{{ payment.createdAt | date: 'dd/MM/yyyy' }}</span>
+                </td>
+                <td class="saas-nowrap">
+                  {{ payment.order ? '#' + shortId(payment.orderId) : '—' }}
+                </td>
+                <td class="saas-nowrap">{{ methodLabel(payment.method) }}</td>
+                <td class="is-right">
+                  <strong class="saas-cell-strong">
+                    {{ payment.amount | number: '1.0-0' }} FCFA
+                  </strong>
+                </td>
+                <td>
+                  <span class="saas-badge" [ngClass]="'saas-badge--' + tone(payment.status)">
+                    <span class="saas-badge__dot"></span>
+                    {{ statusLabel(payment.status) }}
+                  </span>
+                </td>
+                <td class="is-right">
+                  @if (payment.status === 'pending') {
+                    <button
+                      type="button"
+                      class="saas-btn saas-btn--danger-soft saas-btn--sm"
+                      [disabled]="busyId() === payment.id"
+                      (click)="cancelPayment(payment.id)"
+                    >
+                      Annuler
+                    </button>
+                  } @else {
+                    <span class="saas-muted saas-nowrap">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

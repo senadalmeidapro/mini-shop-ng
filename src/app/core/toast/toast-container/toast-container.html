@@ -1,0 +1,30 @@
+<div class="toasts" role="status" aria-live="polite">
+  @for (item of toast.toasts(); track item.id) {
+    <button
+      type="button"
+      class="toast"
+      [class.toast--success]="item.kind === 'success'"
+      [class.toast--error]="item.kind === 'error'"
+      [class.toast--warning]="item.kind === 'warning'"
+      (click)="toast.dismiss(item.id)"
+    >
+      <span class="toast__icon" aria-hidden="true">
+        @switch (item.kind) {
+          @case ('success') {
+            &#10003;
+          }
+          @case ('error') {
+            &#33;
+          }
+          @case ('warning') {
+            !
+          }
+          @default {
+            i
+          }
+        }
+      </span>
+      <span class="toast__message">{{ item.message }}</span>
+    </button>
+  }
+</div>

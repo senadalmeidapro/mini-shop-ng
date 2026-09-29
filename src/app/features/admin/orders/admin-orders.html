@@ -1,0 +1,118 @@
+<div class="saas-page-head">
+  <div class="saas-page-head__text">
+    <h2>Commandes</h2>
+    <p>Suivez les commandes de vos clients et confirmez les demandes en attente.</p>
+  </div>
+  <div class="saas-page-head__actions">
+    <span class="saas-badge saas-badge--neutral">{{ orders().length }} commandes</span>
+    @if (pendingCount() > 0) {
+      <span class="saas-badge saas-badge--warning">
+        <span class="saas-badge__dot"></span>
+        {{ pendingCount() }} en attente
+      </span>
+    }
+  </div>
+</div>
+
+<section class="saas-card">
+  <div class="saas-card__head">
+    <h3>Toutes les commandes</h3>
+  </div>
+
+  <div class="saas-card__body saas-card__body--flush">
+    @if (loading()) {
+      <div class="saas-empty">
+        <span class="saas-skeleton" style="width: 180px; height: 12px"></span>
+      </div>
+    } @else if (orders().length === 0) {
+      <div class="saas-empty">
+        <span class="saas-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="22" height="22" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M4 3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1h1a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h1V3Zm2 1h8V3H6v1Zm9 3v9H5V7h10Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <p class="saas-empty__title">Aucune commande</p>
+        <p class="saas-empty__text">Les commandes passées par vos clients apparaîtront ici.</p>
+      </div>
+    } @else {
+      <div class="saas-table-wrap">
+        <table class="saas-table">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Client</th>
+              <th class="is-right">Articles</th>
+              <th class="is-right">Total</th>
+              <th>Statut</th>
+              <th class="is-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of orders(); track order.id) {
+              <tr>
+                <td>
+                  <strong class="saas-cell-strong">#{{ shortId(order.id) }}</strong>
+                  <span class="saas-cell-sub">{{ order.createdAt | date: 'dd/MM/yyyy' }}</span>
+                </td>
+                <td>
+                  <div class="orders__customer">
+                    <span class="saas-avatar saas-avatar--sm saas-avatar--muted">
+                      {{ (order.user?.fullName ?? customerEmail(order)).charAt(0) }}
+                    </span>
+                    <span>
+                      <strong class="saas-cell-strong">
+                        {{ order.user?.fullName ?? 'Client' }}
+                      </strong>
+                      <span class="saas-cell-sub">{{ customerEmail(order) }}</span>
+                    </span>
+                  </div>
+                </td>
+                <td class="is-right saas-nowrap">{{ order.orderItems.length }}</td>
+                <td class="is-right">
+                  <strong class="saas-cell-strong">{{ order.total | number: '1.0-0' }} FCFA</strong>
+                </td>
+                <td>
+                  <span class="saas-badge" [ngClass]="'saas-badge--' + statusTone(order.status)">
+                    <span class="saas-badge__dot"></span>
+                    {{ statusLabel(order.status) }}
+                  </span>
+                </td>
+                <td class="is-right">
+                  @if (order.status === 'pending') {
+                    <button
+                      type="button"
+                      class="saas-btn saas-btn--primary saas-btn--sm"
+                      [disabled]="busyId() === order.id"
+                      (click)="confirmOrder(order.id)"
+                    >
+                      <svg
+                        viewBox="0 0 20 20"
+                        width="13"
+                        height="13"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                      Confirmer
+                    </button>
+                  } @else {
+                    <span class="saas-muted saas-nowrap">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

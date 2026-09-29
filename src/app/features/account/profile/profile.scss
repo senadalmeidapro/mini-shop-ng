@@ -1,0 +1,64 @@
+.profile__hero {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding-bottom: 1.05rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.profile__name {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.profile__rows {
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+  padding-top: 1.05rem;
+}
+
+.profile__rows > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.profile__rows dt {
+  font-size: 0.82rem;
+  color: var(--color-text-soft);
+}
+
+.profile__rows dd {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: right;
+  word-break: break-word;
+}
+
+.profile__security {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.1rem;
+}
+
+.profile__security-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.profile__security-label {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--color-text);
+}

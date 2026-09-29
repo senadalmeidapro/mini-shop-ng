@@ -1,0 +1,100 @@
+@if (product(); as product) {
+  <div class="detail">
+    <div class="detail__visual reveal">
+      <div class="detail__media" [ngClass]="{ 'detail__media--out': product.stock === 0 }">
+        @if (product.imageUrl) {
+          <img class="detail__image" [src]="apiBaseUrl + product.imageUrl" [alt]="product.name" />
+        } @else {
+          <div class="detail__placeholder" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              width="46"
+              height="46"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+              <path d="M3 6h18" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+          </div>
+        }
+        <div class="detail__shine" aria-hidden="true"></div>
+      </div>
+
+      <span
+        class="detail__badge"
+        [ngClass]="{
+          'detail__badge--low': product.stock > 0 && product.stock < 5,
+          'detail__badge--out': product.stock === 0,
+        }"
+      >
+        <span class="detail__badge-dot" aria-hidden="true"></span>
+        @if (product.stock === 0) {
+          <span>Rupture de stock</span>
+        } @else if (product.stock < 5) {
+          <span>Stock limité</span>
+        } @else {
+          <span>En stock</span>
+        }
+      </span>
+
+      <div class="detail__blob" aria-hidden="true"></div>
+    </div>
+
+    <div class="detail__content reveal reveal--d1">
+      <span class="detail__eyebrow">Détail produit</span>
+      <h1 class="detail__title">{{ product.name }}</h1>
+
+      <div class="detail__pricing">
+        <span class="detail__price">{{ product.price }} FCFA</span>
+        <small class="detail__stock">Stock : {{ product.stock }}</small>
+      </div>
+
+      <p class="detail__description">{{ product.description }}</p>
+
+      <div class="detail__buy">
+        <div class="detail__qty">
+          <label for="qty">Qte :</label>
+          <input
+            id="qty"
+            type="number"
+            min="1"
+            [max]="product.stock"
+            [ngModel]="quantity()"
+            (ngModelChange)="onQuantityChange($event)"
+          />
+        </div>
+
+        <button type="button" class="detail__btn" [disabled]="isAdding()" (click)="addProduct()">
+          <svg
+            viewBox="0 0 24 24"
+            width="17"
+            height="17"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="8" cy="21" r="1" />
+            <circle cx="19" cy="21" r="1" />
+            <path
+              d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+            />
+          </svg>
+          Commander
+        </button>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="detail__loading">
+    <span class="detail__spinner" aria-hidden="true"></span>
+    <span>{{ isLoading() ? 'Chargement...' : 'Produit introuvable' }}</span>
+  </div>
+}

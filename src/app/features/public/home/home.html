@@ -1,0 +1,235 @@
+<div class="home">
+  <section class="hero" [class.hero--loading]="productsLoading()">
+    <div class="hero__content">
+      <span class="hero__badge reveal">Nouveau</span>
+
+      <h1 class="hero__title reveal reveal--d1">
+        Bienvenue sur
+        <span class="grad-text">MiniShop</span>
+        .
+      </h1>
+
+      <p class="hero__subtitle reveal reveal--d2">
+        Votre boutique en ligne pour des produits sélectionnés avec soin.
+      </p>
+
+      <div class="hero__actions reveal reveal--d3">
+        <a class="hero__btn hero__btn--primary" routerLink="/products"> Voir les produits </a>
+
+        <a class="hero__btn hero__btn--outline" routerLink="/auth/register"> Créer un compte </a>
+      </div>
+
+      <div class="hero__stats reveal reveal--d4">
+        <div class="hero__stat">
+          <span class="hero__stat-value">24h</span>
+          <span class="hero__stat-label">Livraison rapide</span>
+        </div>
+        <div class="hero__stat-divider"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">100%</span>
+          <span class="hero__stat-label">Sécurisé</span>
+        </div>
+        <div class="hero__stat-divider"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">+1k</span>
+          <span class="hero__stat-label">Clients satisfaits</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features reveal">
+    <div class="features__grid">
+      <div class="features__card reveal reveal--d1">
+        <span class="features__icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="22"
+            height="22"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5V22" />
+            <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5" />
+            <path d="M3 13h18l-3-4H6L3 13Z" />
+            <path d="M3 13v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6" />
+          </svg>
+        </span>
+        <h3 class="features__title">Livraison rapide</h3>
+        <p class="features__text">
+          Expédition sous 24h pour tous les produits disponibles en stock.
+        </p>
+      </div>
+
+      <div class="features__card reveal reveal--d2">
+        <span class="features__icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="22"
+            height="22"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+        </span>
+        <h3 class="features__title">Paiement sécurisé</h3>
+        <p class="features__text">
+          Transactions chiffrées et protégées pour une tranquillité totale.
+        </p>
+      </div>
+
+      <div class="features__card reveal reveal--d3">
+        <span class="features__icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="22"
+            height="22"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M11 18h2" />
+            <rect x="4" y="4" width="16" height="14" rx="2" />
+            <path d="M4 14h16" />
+            <circle cx="12" cy="11" r="3" />
+          </svg>
+        </span>
+        <h3 class="features__title">Support 7j/7</h3>
+        <p class="features__text">
+          Une équipe à votre écoute pour répondre à toutes vos questions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__header reveal">
+      <h2 class="section__title">Découvrez nos produits</h2>
+      <a class="section__link" routerLink="/products">
+        Tout voir
+        <svg
+          viewBox="0 0 24 24"
+          width="15"
+          height="15"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      </a>
+    </div>
+
+    @if (productsLoading()) {
+      <div class="home__grid">
+        @for (card of skeletonCards; track card) {
+          <article class="product-card product-card--skeleton">
+            <div class="product-card__img-skeleton"></div>
+            <div class="product-card__lines">
+              <div class="product-card__line product-card__line--w70"></div>
+              <div class="product-card__line"></div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="home__grid">
+        @for (product of featuredProducts(); track product.id; let i = $index) {
+          <article class="product-card reveal" [ngClass]="'reveal--d' + revealDelay(i)">
+            <div
+              class="product-card__top"
+              role="button"
+              tabindex="0"
+              (click)="goToProduct(product.id)"
+              (keydown.enter)="goToProduct(product.id)"
+            >
+              @if (product.imageUrl) {
+                <img
+                  class="product-card__img"
+                  [src]="apiBaseUrl + product.imageUrl"
+                  [alt]="product.name"
+                />
+              }
+              <div class="product-card__shine" aria-hidden="true"></div>
+              <span class="product-card__peek">Voir le produit</span>
+            </div>
+
+            <div class="product-card__body">
+              <a class="product-card__name" [routerLink]="['/products', product.id]">
+                {{ product.name }}
+              </a>
+              <p class="product-card__desc">{{ product.description }}</p>
+
+              <div class="product-card__footer">
+                <span class="product-card__price">{{ formatPrice(product.price) }} FCFA</span>
+                <span
+                  class="product-card__stock"
+                  [class.product-card__stock--low]="product.stock > 0 && product.stock < 5"
+                  [class.product-card__stock--out]="product.stock === 0"
+                >
+                  Stock : {{ product.stock }}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="product-card__btn"
+              [disabled]="product.stock === 0 || cartLoading()[product.id]"
+              (click)="addToCart($event, product)"
+            >
+              @if (!cartLoading()[product.id]) {
+                <svg
+                  viewBox="0 0 24 24"
+                  width="15"
+                  height="15"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="8" cy="21" r="1" />
+                  <circle cx="19" cy="21" r="1" />
+                  <path
+                    d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+                  />
+                </svg>
+                Ajouter
+              } @else {
+                <span class="product-card__spinner"></span>
+              }
+            </button>
+          </article>
+        }
+      </div>
+    }
+
+    @if (!productsLoading() && !featuredProducts().length) {
+      <p class="home__empty reveal">Aucun produit disponible pour le moment.</p>
+    }
+  </section>
+
+  <section class="cta reveal">
+    <div class="cta__bg" aria-hidden="true"></div>
+    <h2 class="cta__title">Prêt à commencer&nbsp;?</h2>
+    <p class="cta__text">
+      Créez votre compte en quelques secondes et accédez à un catalogue unique.
+    </p>
+    <a class="cta__btn" routerLink="/auth/register"> Créer un compte </a>
+  </section>
+</div>

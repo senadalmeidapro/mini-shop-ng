@@ -1,0 +1,18 @@
+<div class="saas-page-head">
+  <div class="saas-page-head__text">
+    <h2>Mes achats</h2>
+    <p>Gérez votre panier et suivez vos commandes en toute simplicité.</p>
+  </div>
+</div>
+
+<app-orders-nav [active]="tab()" (tabChange)="tab.set($event)" />
+
+<div class="saas-card">
+  <div class="saas-card__body saas-card__body--flush">
+    @if (tab() === 'cart') {
+      <app-cart-list />
+    } @else {
+      <app-order-list />
+    }
+  </div>
+</div>

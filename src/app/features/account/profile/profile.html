@@ -1,0 +1,105 @@
+<div class="saas-page-head">
+  <div class="saas-page-head__text">
+    <h2>Mon profil</h2>
+    <p>Consultez les informations associées à votre compte.</p>
+  </div>
+</div>
+
+@if (user(); as current) {
+  <div class="saas-grid-2">
+    <section class="saas-card">
+      <div class="saas-card__head">
+        <h3>Identité</h3>
+      </div>
+      <div class="saas-card__body">
+        <div class="profile__hero">
+          <span class="saas-avatar saas-avatar--lg" aria-hidden="true">{{ initials() }}</span>
+          <div>
+            <strong class="profile__name">{{ current.fullName ?? 'Client Mini Shop' }}</strong>
+            <span class="saas-cell-sub">Membre depuis votre inscription</span>
+          </div>
+        </div>
+
+        <dl class="profile__rows">
+          <div>
+            <dt>Nom complet</dt>
+            <dd>{{ current.fullName ?? '—' }}</dd>
+          </div>
+          <div>
+            <dt>Adresse e-mail</dt>
+            <dd>{{ current.email }}</dd>
+          </div>
+          <div>
+            <dt>Rôle</dt>
+            <dd>
+              <span class="saas-badge saas-badge--info">
+                <span class="saas-badge__dot"></span>
+                {{ roleLabel(current.role) }}
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="saas-card">
+      <div class="saas-card__head">
+        <h3>Sécurité du compte</h3>
+      </div>
+      <div class="saas-card__body">
+        <div class="saas-alert saas-alert--info">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="M10 1.5a3.5 3.5 0 0 0-3.5 3.5V6L5 7.4v8.1c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V7.4L13.5 6V5A3.5 3.5 0 0 0 10 1.5ZM8 5a2 2 0 1 1 4 0v1H8V5Zm2 4a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span>
+            Votre session est protégée. Pour changer d'adresse e-mail ou de mot de passe, contactez
+            le support Mini Shop.
+          </span>
+        </div>
+
+        <div class="profile__security">
+          <div class="profile__security-item">
+            <span class="profile__security-label">Compte vérifié</span>
+            <span class="saas-badge saas-badge--success">
+              <span class="saas-badge__dot"></span>
+              Actif
+            </span>
+          </div>
+          <div class="profile__security-item">
+            <span class="profile__security-label">Accès vendeur</span>
+            <span class="saas-badge saas-badge--neutral">
+              {{ current.role === 'supplier' ? 'Boutique active' : 'Non configuré' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+} @else {
+  <section class="saas-card">
+    <div class="saas-card__body">
+      <div class="saas-empty">
+        <span class="saas-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="22" height="22" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M10 2a3.5 3.5 0 0 0-3.5 3.5V6L5 7.4v8.1c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V7.4L13.5 6V5A3.5 3.5 0 0 0 10 2ZM8 5a2 2 0 1 1 4 0v1H8V5Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <p class="saas-empty__title">Vous devez être connecté</p>
+        <p class="saas-empty__text">
+          Connectez-vous pour consulter les informations de votre compte.
+        </p>
+        <a routerLink="/login" class="saas-btn saas-btn--primary saas-empty__action"
+          >Se connecter</a
+        >
+      </div>
+    </div>
+  </section>
+}

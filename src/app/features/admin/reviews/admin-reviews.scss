@@ -1,0 +1,58 @@
+.reviews {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reviews__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.95rem 1.1rem;
+}
+
+.reviews__item + .reviews__item {
+  border-top: 1px solid var(--color-border);
+}
+
+.reviews__item > .saas-btn {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+.reviews__body {
+  min-width: 0;
+  margin-right: auto;
+}
+
+.reviews__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.reviews__stars {
+  display: inline-flex;
+  gap: 1px;
+  color: var(--c-gold);
+}
+
+.reviews__product {
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  color: var(--color-text-soft);
+}
+
+.reviews__comment {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+
+@media (max-width: 640px) {
+  .reviews__item {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,10 @@
+.orders__customer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.orders__customer span {
+  min-width: 0;
+}

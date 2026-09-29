@@ -1,0 +1,78 @@
+<div class="shop-list">
+  <section class="shop-list__hero">
+    <div class="shop-list__hero-glow" aria-hidden="true"></div>
+    <h1 class="reveal">Nos boutiques</h1>
+    <p class="reveal reveal--d1">
+      Découvrez les vendeurs qui composent Mini Shop et explorez leurs sélections.
+    </p>
+  </section>
+
+  @if (shops().length) {
+    <div class="shop-list__grid">
+      @for (shop of shops(); track shop.id; let idx = $index) {
+        <a
+          class="shop-card reveal"
+          [ngClass]="'reveal--d' + revealDelay(idx)"
+          [routerLink]="['/shops', shop.id]"
+        >
+          <div class="shop-card__badge" aria-hidden="true">
+            {{ shop.name.charAt(0).toUpperCase() }}
+          </div>
+          <div class="shop-card__content">
+            <h2 class="shop-card__name">{{ shop.name }}</h2>
+            @if (shop.description) {
+              <p class="shop-card__desc">{{ shop.description }}</p>
+            }
+            <div class="shop-card__meta">
+              <span class="shop-card__meta-item">
+                <svg class="shop-card__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path
+                    d="M3 7l7-4 7 4v6a1 1 0 01-1 1H4a1 1 0 01-1-1V7z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M7 17v-5h6v5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                {{ productCount(shop.id) }} produits
+              </span>
+              <span class="shop-card__arrow">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path
+                    d="M7 5l5 5-5 5"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div class="shop-card__shine" aria-hidden="true"></div>
+        </a>
+      }
+    </div>
+  } @else {
+    <div class="shop-list__empty reveal">
+      <svg class="shop-list__empty-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <rect x="6" y="14" width="36" height="26" rx="3" stroke="currentColor" stroke-width="2" />
+        <path
+          d="M14 14V10a10 10 0 0120 0v4"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <circle cx="24" cy="27" r="3" stroke="currentColor" stroke-width="2" />
+      </svg>
+      Aucune boutique en ligne pour le moment.
+    </div>
+  }
+</div>

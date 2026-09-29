@@ -1,0 +1,10 @@
+.users__identity {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.users__identity span {
+  min-width: 0;
+}

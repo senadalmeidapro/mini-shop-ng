@@ -1,0 +1,195 @@
+<div class="saas-page-head">
+  <div class="saas-page-head__text">
+    <h2>Utilisateurs</h2>
+    <p>Créez des comptes et attribuez les rôles de la plateforme.</p>
+  </div>
+  <div class="saas-page-head__actions">
+    <span class="saas-badge saas-badge--neutral">{{ users().length }} comptes</span>
+  </div>
+</div>
+
+<form class="saas-card" [formGroup]="form" (ngSubmit)="handleSubmit()">
+  <div class="saas-card__head">
+    <h3>{{ isEditing() ? 'Modifier un utilisateur' : 'Nouvel utilisateur' }}</h3>
+    @if (isEditing()) {
+      <span class="saas-badge saas-badge--info">Édition en cours</span>
+    }
+  </div>
+
+  <div class="saas-card__body">
+    <div class="saas-form-grid">
+      <div class="saas-field">
+        <label for="user-name">Nom complet</label>
+        <input
+          id="user-name"
+          class="saas-input"
+          type="text"
+          formControlName="fullName"
+          placeholder="Ex. Awa Diallo"
+        />
+      </div>
+
+      <div class="saas-field">
+        <label for="user-email">Email</label>
+        <input
+          id="user-email"
+          class="saas-input"
+          type="email"
+          formControlName="email"
+          placeholder="awa.diallo@exemple.com"
+        />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <span class="saas-field__error">Saisissez une adresse email valide.</span>
+        }
+      </div>
+
+      <div class="saas-field">
+        <label for="user-password">Mot de passe</label>
+        <input
+          id="user-password"
+          class="saas-input"
+          type="password"
+          formControlName="password"
+          [placeholder]="isEditing() ? 'Laisser vide pour conserver' : 'Mot de passe'"
+        />
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <span class="saas-field__error">Le mot de passe est obligatoire à la création.</span>
+        }
+      </div>
+    </div>
+
+    <div class="saas-form-actions">
+      <button
+        type="submit"
+        class="saas-btn saas-btn--primary"
+        [disabled]="saving() || form.invalid"
+      >
+        <svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor" aria-hidden="true">
+          <path
+            d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"
+          />
+        </svg>
+        {{ isEditing() ? 'Mettre à jour' : 'Créer le compte' }}
+      </button>
+
+      @if (isEditing()) {
+        <button type="button" class="saas-btn saas-btn--secondary" (click)="resetForm()">
+          Annuler
+        </button>
+      }
+    </div>
+  </div>
+</form>
+
+<section class="saas-card">
+  <div class="saas-card__head">
+    <h3>Comptes enregistrés</h3>
+  </div>
+
+  <div class="saas-card__body saas-card__body--flush">
+    @if (isLoading()) {
+      <div class="saas-empty">
+        <span class="saas-skeleton" style="width: 160px; height: 12px"></span>
+      </div>
+    } @else if (users().length === 0) {
+      <div class="saas-empty">
+        <span class="saas-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="22" height="22" fill="currentColor">
+            <path
+              d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-7a3 3 0 0 1 0 6 3 3 0 0 1 0-6ZM2 17a6 6 0 0 1 12 0v1H2v-1Zm14.5 1H22v-1a5.5 5.5 0 0 0-4.2-5.36A7 7 0 0 1 16.5 18Z"
+            />
+          </svg>
+        </span>
+        <p class="saas-empty__title">Aucun utilisateur</p>
+        <p class="saas-empty__text">Créez le premier compte depuis le formulaire ci-dessus.</p>
+      </div>
+    } @else {
+      <div class="saas-table-wrap">
+        <table class="saas-table">
+          <thead>
+            <tr>
+              <th>Utilisateur</th>
+              <th>Email</th>
+              <th>Rôle</th>
+              <th class="is-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users(); track user.id) {
+              <tr>
+                <td>
+                  <div class="users__identity">
+                    <span class="saas-avatar saas-avatar--sm">{{ initialsOf(user) }}</span>
+                    <span>
+                      <strong class="saas-cell-strong">{{ user.fullName ?? 'Sans nom' }}</strong>
+                      <span class="saas-cell-sub">{{ user.email }}</span>
+                    </span>
+                  </div>
+                </td>
+                <td class="saas-nowrap">{{ user.email }}</td>
+                <td>
+                  <span
+                    class="saas-badge"
+                    [ngClass]="
+                      'saas-badge--' +
+                      (user.role === 'admin'
+                        ? 'info'
+                        : user.role === 'supplier'
+                          ? 'success'
+                          : 'neutral')
+                    "
+                  >
+                    {{ roleLabel(user.role) }}
+                  </span>
+                </td>
+                <td class="is-right">
+                  <div class="saas-table__actions">
+                    <button
+                      type="button"
+                      class="saas-btn saas-btn--secondary saas-btn--sm"
+                      (click)="startEdit(user)"
+                    >
+                      <svg
+                        viewBox="0 0 20 20"
+                        width="13"
+                        height="13"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M2.695 14.763l-1.262 3.154a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.885L17.5 5.5a2.121 2.121 0 0 0-3-3L3.58 13.42a4 4 0 0 0-.885 1.343Z"
+                        />
+                      </svg>
+                      Modifier
+                    </button>
+                    <button
+                      type="button"
+                      class="saas-btn saas-btn--danger-soft saas-btn--sm"
+                      [disabled]="deletingId() === user.id"
+                      (click)="handleDelete(user.id)"
+                    >
+                      <svg
+                        viewBox="0 0 20 20"
+                        width="13"
+                        height="13"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.519.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l-.3-7.5Z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                      Supprimer
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

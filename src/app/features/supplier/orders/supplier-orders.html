@@ -1,0 +1,123 @@
+<div class="saas-page-head">
+  <div class="saas-page-head__text">
+    <h2>Commandes</h2>
+    <p>Confirmez, expédiez et suivez les commandes de votre boutique.</p>
+  </div>
+  <div class="saas-page-head__actions">
+    <span class="saas-badge saas-badge--neutral">{{ orders().length }} commandes</span>
+    @if (pendingCount() > 0) {
+      <span class="saas-badge saas-badge--warning">
+        <span class="saas-badge__dot"></span>
+        {{ pendingCount() }} à traiter
+      </span>
+    }
+  </div>
+</div>
+
+<section class="saas-card">
+  <div class="saas-card__body saas-card__body--flush">
+    @if (loading()) {
+      <div class="saas-empty">
+        <span class="saas-skeleton" style="width: 200px; height: 12px"></span>
+      </div>
+    } @else if (orders().length === 0) {
+      <div class="saas-empty">
+        <span class="saas-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="22" height="22" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M4 3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1h1a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h1V3Zm2 1h8V3H6v1Zm9 3v9H5V7h10Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <p class="saas-empty__title">Aucune commande</p>
+        <p class="saas-empty__text">Les commandes de vos clients apparaîtront ici.</p>
+      </div>
+    } @else {
+      <div class="saas-table-wrap">
+        <table class="saas-table">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Client</th>
+              <th class="is-right">Articles</th>
+              <th class="is-right">Total</th>
+              <th>Date</th>
+              <th>Statut</th>
+              <th class="is-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of orders(); track order.id) {
+              <tr>
+                <td>
+                  <strong class="saas-cell-strong">#{{ order.id.slice(-6).toUpperCase() }}</strong>
+                </td>
+                <td>
+                  <div class="so__customer">
+                    <strong class="saas-cell-strong">{{ order.user?.fullName ?? '—' }}</strong>
+                    @if (order.user?.email) {
+                      <span class="saas-cell-sub">{{ order.user.email }}</span>
+                    }
+                  </div>
+                </td>
+                <td class="is-right">
+                  <span class="saas-badge saas-badge--neutral">{{ order.orderItems.length }}</span>
+                </td>
+                <td class="is-right">
+                  <strong class="saas-cell-strong">{{ order.total | number: '1.0-0' }} FCFA</strong>
+                </td>
+                <td class="saas-nowrap">{{ order.createdAt | date: 'dd MMM yyyy' }}</td>
+                <td>
+                  <span class="saas-badge" [ngClass]="'saas-badge--' + statusTone(order.status)">
+                    <span class="saas-badge__dot"></span>
+                    {{ statusLabel(order.status) }}
+                  </span>
+                </td>
+                <td class="is-right">
+                  @if (canManage(order.status)) {
+                    <div class="saas-table__actions">
+                      @if (order.status === 'confirmed') {
+                        <input
+                          class="saas-input saas-input--sm"
+                          type="text"
+                          [name]="'tracking-' + order.id"
+                          placeholder="N° tracking"
+                          [ngModel]="trackingInputs()[order.id] ?? ''"
+                          (ngModelChange)="setTracking(order.id, $event)"
+                        />
+                      }
+                      @if (nextStatus(order.status)) {
+                        <button
+                          type="button"
+                          class="saas-btn saas-btn--primary saas-btn--sm"
+                          [disabled]="busyId() === order.id"
+                          (click)="advanceStatus(order.id, order.status)"
+                        >
+                          {{ nextStatusLabel(order.status) }}
+                        </button>
+                      }
+                      @if (canCancel(order.status)) {
+                        <button
+                          type="button"
+                          class="saas-btn saas-btn--danger-soft saas-btn--sm"
+                          [disabled]="busyId() === order.id"
+                          (click)="cancelOrder(order.id)"
+                        >
+                          Annuler
+                        </button>
+                      }
+                    </div>
+                  } @else {
+                    <span class="saas-muted">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

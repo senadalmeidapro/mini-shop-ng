@@ -1,0 +1,256 @@
+<div class="saas-page-head">
+  <div class="saas-page-head__text">
+    <h2>Mes produits</h2>
+    <p>Gérez le catalogue de votre boutique, prix et disponibilité inclus.</p>
+  </div>
+  <div class="saas-page-head__actions">
+    <span class="saas-badge saas-badge--neutral">{{ products().length }} produits</span>
+    <button type="button" class="saas-btn saas-btn--primary" (click)="openCreate()">
+      <svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor" aria-hidden="true">
+        <path
+          d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"
+        />
+      </svg>
+      Ajouter un produit
+    </button>
+  </div>
+</div>
+
+@if (showForm()) {
+  <form class="saas-card" [formGroup]="form" (ngSubmit)="handleSubmit()">
+    <div class="saas-card__head">
+      <h3>{{ isEditing() ? 'Modifier le produit' : 'Nouveau produit' }}</h3>
+      @if (isEditing()) {
+        <span class="saas-badge saas-badge--info">Édition en cours</span>
+      }
+    </div>
+
+    <div class="saas-card__body">
+      <div class="saas-form-grid">
+        <div class="saas-field">
+          <label for="sp-name">Nom</label>
+          <input
+            id="sp-name"
+            class="saas-input"
+            type="text"
+            formControlName="name"
+            placeholder="Ex. Tissu wax 6 yards"
+          />
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <span class="saas-field__error">Le nom est obligatoire.</span>
+          }
+        </div>
+
+        <div class="saas-field">
+          <label for="sp-category">Catégorie</label>
+          <select id="sp-category" class="saas-select" formControlName="categoryId">
+            <option value="" disabled>Choisir une catégorie</option>
+            @for (category of categories(); track category.id) {
+              <option [value]="category.id">{{ category.name }}</option>
+            }
+          </select>
+          @if (form.controls.categoryId.touched && form.controls.categoryId.invalid) {
+            <span class="saas-field__error">La catégorie est obligatoire.</span>
+          }
+        </div>
+
+        <div class="saas-field">
+          <label for="sp-price">Prix (FCFA)</label>
+          <input
+            id="sp-price"
+            class="saas-input"
+            type="number"
+            min="0"
+            step="1"
+            formControlName="price"
+          />
+        </div>
+
+        <div class="saas-field">
+          <label for="sp-stock">Stock</label>
+          <input id="sp-stock" class="saas-input" type="number" min="0" formControlName="stock" />
+        </div>
+
+        <div class="saas-field saas-field--wide">
+          <label for="sp-description">Description</label>
+          <textarea
+            id="sp-description"
+            class="saas-textarea"
+            formControlName="description"
+            placeholder="Décrivez le produit en quelques lignes."
+          ></textarea>
+          @if (form.controls.description.touched && form.controls.description.invalid) {
+            <span class="saas-field__error">La description est obligatoire.</span>
+          }
+        </div>
+
+        <div class="saas-field saas-field--wide">
+          <label for="sp-file">Image du produit</label>
+          <input
+            id="sp-file"
+            class="saas-input"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            (change)="handleFileChange($event)"
+          />
+          <span class="saas-field__hint">JPEG, PNG ou WebP. Ignorée lors d'une modification.</span>
+        </div>
+      </div>
+
+      <div class="saas-form-actions">
+        <button type="submit" class="saas-btn saas-btn--primary" [disabled]="form.invalid">
+          {{ isEditing() ? 'Enregistrer' : 'Créer le produit' }}
+        </button>
+        <button type="button" class="saas-btn saas-btn--secondary" (click)="resetForm()">
+          Annuler
+        </button>
+      </div>
+    </div>
+  </form>
+}
+
+<section class="saas-card">
+  <div class="saas-card__body saas-card__body--flush">
+    @if (productsLoading()) {
+      <div class="saas-empty">
+        <span class="saas-skeleton" style="width: 200px; height: 12px"></span>
+      </div>
+    } @else if (products().length === 0) {
+      <div class="saas-empty">
+        <span class="saas-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="22" height="22" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M10 2a1 1 0 0 1 .6.2l6 4A1 1 0 0 1 17 7v6a1 1 0 0 1-.4.8l-6 4a1 1 0 0 1-1.2 0l-6-4A1 1 0 0 1 3 13V7a1 1 0 0 1 .4-.8l6-4A1 1 0 0 1 10 2Zm0 2.2L5.5 7 10 9.8 14.5 7 10 4.2ZM5 8.7v4.6l4 2.7v-4.6L5 8.7Zm6 7.3 4-2.7V8.7l-4 2.7V16Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <p class="saas-empty__title">Aucun produit</p>
+        <p class="saas-empty__text">Ajoutez votre premier article pour commencer à vendre.</p>
+        <button
+          type="button"
+          class="saas-btn saas-btn--secondary saas-empty__action"
+          (click)="openCreate()"
+        >
+          Ajouter un produit
+        </button>
+      </div>
+    } @else {
+      <div class="saas-table-wrap">
+        <table class="saas-table">
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th>Catégorie</th>
+              <th class="is-right">Prix</th>
+              <th>Stock</th>
+              <th class="is-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of products(); track product.id) {
+              <tr>
+                <td>
+                  <div class="sp__identity">
+                    <span class="sp__thumb">
+                      @if (product.imageUrl) {
+                        <img [src]="apiBaseUrl + product.imageUrl" [alt]="product.name" />
+                      } @else {
+                        <svg
+                          viewBox="0 0 20 20"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M3 4a1 1 0 0 1 1-1h3l1.5 1.5H16a1 1 0 0 1 1 1V15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4Z"
+                          />
+                        </svg>
+                      }
+                    </span>
+                    <span class="sp__names">
+                      <strong class="saas-cell-strong">{{ product.name }}</strong>
+                      <span class="saas-cell-sub">{{ product.description }}</span>
+                    </span>
+                  </div>
+                </td>
+                <td class="saas-nowrap">{{ categoryName(product.categoryId) }}</td>
+                <td class="is-right">
+                  <strong class="saas-cell-strong"
+                    >{{ product.price | number: '1.0-0' }} FCFA</strong
+                  >
+                </td>
+                <td>
+                  <span
+                    class="saas-badge"
+                    [ngClass]="
+                      product.stock === 0
+                        ? 'saas-badge--danger'
+                        : product.stock <= (product.lowStockThreshold ?? 5)
+                          ? 'saas-badge--warning'
+                          : 'saas-badge--success'
+                    "
+                  >
+                    <span class="saas-badge__dot"></span>
+                    {{ product.stock }} en stock
+                  </span>
+                </td>
+                <td class="is-right">
+                  <div class="saas-table__actions">
+                    <button
+                      type="button"
+                      class="saas-btn saas-btn--secondary saas-btn--sm"
+                      (click)="startEdit(product)"
+                    >
+                      <svg
+                        viewBox="0 0 20 20"
+                        width="13"
+                        height="13"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M2.695 14.763l-1.262 3.154a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.885L17.5 5.5a2.121 2.121 0 0 0-3-3L3.58 13.42a4 4 0 0 0-.885 1.343Z"
+                        />
+                      </svg>
+                      Modifier
+                    </button>
+                    <button
+                      type="button"
+                      class="saas-btn saas-btn--danger-soft saas-btn--sm"
+                      (click)="confirmDelete(product.id)"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+@if (deleteId()) {
+  <div class="saas-modal" role="dialog" aria-modal="true" aria-labelledby="sp-delete-title">
+    <div class="saas-modal__backdrop" (click)="deleteId.set(null)"></div>
+    <div class="saas-modal__panel">
+      <h3 id="sp-delete-title" class="saas-modal__title">Supprimer ce produit ?</h3>
+      <p class="saas-modal__text">
+        Cette action est définitive. Le produit sera retiré de votre catalogue.
+      </p>
+      <div class="saas-modal__actions">
+        <button type="button" class="saas-btn saas-btn--danger" (click)="handleDelete()">
+          Supprimer
+        </button>
+        <button type="button" class="saas-btn saas-btn--secondary" (click)="deleteId.set(null)">
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+}

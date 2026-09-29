@@ -1,0 +1,305 @@
+<div class="saas-page-head">
+  <div class="saas-page-head__text">
+    <h2>Tableau de bord</h2>
+    <p>Suivez vos ventes, vos stocks et vos dernières commandes.</p>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="saas-stats">
+    @for (i of [0, 1, 2, 3]; track i) {
+      <div class="saas-stat">
+        <span class="saas-skeleton" style="width: 40px; height: 40px; border-radius: 8px"></span>
+        <div class="saas-stat__body">
+          <span class="saas-skeleton" style="display: block; width: 60px; height: 22px"></span>
+          <span
+            class="saas-skeleton"
+            style="display: block; width: 88px; height: 12px; margin-top: 6px"
+          ></span>
+        </div>
+      </div>
+    }
+  </div>
+} @else if (!hasShop()) {
+  <section class="saas-card sd__onboarding">
+    <div class="saas-card__body">
+      <div class="saas-empty">
+        <span class="saas-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="22" height="22" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M3 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2a3 3 0 0 1-2 2.83V17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7.83A3 3 0 0 1 2 5V3Zm1 4.83V16h10V7.83A3 3 0 0 0 15 5H5a3 3 0 0 0-1 2.83ZM5 4v1h10V4H5Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <p class="saas-empty__title">Vous n'avez pas encore de boutique</p>
+        <p class="saas-empty__text">
+          Créez votre boutique pour vendre vos produits et accéder à toutes les ventes.
+        </p>
+      </div>
+
+      <form class="saas-form-grid" [formGroup]="shopForm" (ngSubmit)="createShop()">
+        <div class="saas-field">
+          <label for="shop-name">Nom de la boutique</label>
+          <input
+            id="shop-name"
+            class="saas-input"
+            type="text"
+            formControlName="name"
+            placeholder="Ex. Boutique Diallo"
+            (input)="autofillSlug()"
+          />
+          @if (shopForm.controls.name.touched && shopForm.controls.name.invalid) {
+            <span class="saas-field__error">Le nom est obligatoire.</span>
+          }
+        </div>
+
+        <div class="saas-field">
+          <label for="shop-slug">Identifiant public</label>
+          <input
+            id="shop-slug"
+            class="saas-input"
+            type="text"
+            formControlName="slug"
+            placeholder="boutique-diallo"
+          />
+          <span class="saas-field__hint"
+            >Adresse publique : /shops/{{ shopForm.controls.slug.value || '...' }}</span
+          >
+        </div>
+
+        <div class="saas-field saas-field--wide">
+          <label for="shop-description">Description</label>
+          <textarea
+            id="shop-description"
+            class="saas-textarea"
+            formControlName="description"
+            placeholder="Présentez votre activité en quelques lignes (optionnel)."
+          ></textarea>
+        </div>
+
+        <div class="saas-form-actions saas-field--wide">
+          <button
+            type="submit"
+            class="saas-btn saas-btn--primary"
+            [disabled]="creatingShop() || shopForm.invalid"
+          >
+            {{ creatingShop() ? 'Création…' : 'Créer ma boutique' }}
+          </button>
+          <a routerLink="/shops" class="saas-btn saas-btn--secondary">Parcourir les boutiques</a>
+        </div>
+      </form>
+    </div>
+  </section>
+} @else if (dashboard(); as data) {
+  <div class="saas-row saas-row--between sd__shop">
+    <div class="saas-row">
+      <span class="saas-avatar saas-avatar--lg" aria-hidden="true">
+        {{ data.shop.name.charAt(0).toUpperCase() }}
+      </span>
+      <div>
+        <strong class="sd__shop-name">{{ data.shop.name }}</strong>
+        <span class="saas-cell-sub">/{{ data.shop.slug }}</span>
+      </div>
+    </div>
+
+    <span
+      class="saas-badge"
+      [ngClass]="data.shop.isActive ? 'saas-badge--success' : 'saas-badge--neutral'"
+    >
+      <span class="saas-badge__dot"></span>
+      {{ data.shop.isActive ? 'Boutique active' : 'Boutique inactive' }}
+    </span>
+  </div>
+
+  <div class="saas-stats">
+    <div class="saas-stat">
+      <span class="saas-stat__icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M10 2a1 1 0 0 1 .6.2l6 4A1 1 0 0 1 17 7v6a1 1 0 0 1-.4.8l-6 4a1 1 0 0 1-1.2 0l-6-4A1 1 0 0 1 3 13V7a1 1 0 0 1 .4-.8l6-4A1 1 0 0 1 10 2Zm0 2.2L5.5 7 10 9.8 14.5 7 10 4.2ZM5 8.7v4.6l4 2.7v-4.6L5 8.7Zm6 7.3 4-2.7V8.7l-4 2.7V16Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <span class="saas-stat__body">
+        <span class="saas-stat__value">{{ data.products.total }}</span>
+        <span class="saas-stat__label">Produits</span>
+      </span>
+    </div>
+
+    <div class="saas-stat">
+      <span class="saas-stat__icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <span class="saas-stat__body">
+        <span class="saas-stat__value">{{ data.products.lowStock.length }}</span>
+        <span class="saas-stat__label">Alertes de stock</span>
+        <span class="saas-stat__hint">Réapprovisionnement à prévoir</span>
+      </span>
+    </div>
+
+    <div class="saas-stat saas-stat--accent">
+      <span class="saas-stat__icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+          <path
+            d="M10 1a1 1 0 0 1 1 1v1.06A6 6 0 0 1 16.94 9H18a1 1 0 1 1 0 2h-1.06A6 6 0 0 1 11 16.94V18a1 1 0 1 1-2 0v-1.06A6 6 0 0 1 3.06 11H2a1 1 0 1 1 0-2h1.06A6 6 0 0 1 9 3.06V2a1 1 0 0 1 1-1Z"
+          />
+        </svg>
+      </span>
+      <span class="saas-stat__body">
+        <span class="saas-stat__value">{{ data.revenue | number: '1.0-0' }} F</span>
+        <span class="saas-stat__label">Revenus cumulés</span>
+      </span>
+    </div>
+
+    <div class="saas-stat">
+      <span class="saas-stat__icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M10 2a6 6 0 0 0-6 6c0 1.887-.454 3.665-1.257 5.234a.75.75 0 0 0 .515 1.076 32.91 32.91 0 0 0 3.256.508 3.5 3.5 0 0 0 6.972 0 32.903 32.903 0 0 0 3.256-.508.75.75 0 0 0 .515-1.076A11.448 11.448 0 0 1 16 8a6 6 0 0 0-6-6ZM8.05 14.943a33.54 33.54 0 0 0 3.9 0 2 2 0 0 1-3.9 0Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <span class="saas-stat__body">
+        <span class="saas-stat__value">{{ data.notifications.unread }}</span>
+        <span class="saas-stat__label">Notifications non lues</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="saas-split">
+    <section class="saas-card">
+      <div class="saas-card__head">
+        <h3>Commandes récentes</h3>
+        <a routerLink="/supplier/orders" class="saas-btn saas-btn--ghost saas-btn--sm">Tout voir</a>
+      </div>
+
+      <div class="saas-card__body saas-card__body--flush">
+        @if (data.recentOrders.length === 0) {
+          <div class="saas-empty">
+            <span class="saas-empty__icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" width="22" height="22" fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M4 3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1h1a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h1V3Zm2 1h8V3H6v1Zm9 3v9H5V7h10Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <p class="saas-empty__title">Aucune commande</p>
+            <p class="saas-empty__text">Vos premières commandes apparaîtront ici.</p>
+          </div>
+        } @else {
+          <div class="saas-table-wrap">
+            <table class="saas-table">
+              <thead>
+                <tr>
+                  <th>Référence</th>
+                  <th>Client</th>
+                  <th class="is-right">Total</th>
+                  <th>Statut</th>
+                  <th class="is-right">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (order of data.recentOrders; track order.id) {
+                  <tr>
+                    <td>
+                      <strong class="saas-cell-strong"
+                        >#{{ order.id.slice(-6).toUpperCase() }}</strong
+                      >
+                    </td>
+                    <td>{{ order.customerName ?? '—' }}</td>
+                    <td class="is-right">
+                      <strong class="saas-cell-strong">
+                        {{ order.total | number: '1.0-0' }} FCFA
+                      </strong>
+                    </td>
+                    <td>
+                      <span
+                        class="saas-badge"
+                        [ngClass]="'saas-badge--' + statusTone(order.status)"
+                      >
+                        <span class="saas-badge__dot"></span>
+                        {{ statusLabel(order.status) }}
+                      </span>
+                    </td>
+                    <td class="is-right saas-nowrap saas-muted">
+                      {{ relativeDate(order.createdAt) }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </section>
+
+    <div style="display: grid; gap: 1.15rem">
+      <section class="saas-card">
+        <div class="saas-card__head">
+          <h3>Stocks critiques</h3>
+          <a routerLink="/supplier/products" class="saas-btn saas-btn--ghost saas-btn--sm">
+            Gérer
+          </a>
+        </div>
+
+        <div class="saas-card__body saas-card__body--flush">
+          @if (data.products.lowStock.length === 0) {
+            <p class="saas-empty__text" style="padding: 1.1rem">Tout est approvisionné.</p>
+          } @else {
+            <ul class="sd__list">
+              @for (product of data.products.lowStock; track product.id) {
+                <li>
+                  <span class="saas-cell-strong">{{ product.name }}</span>
+                  <span
+                    class="saas-badge"
+                    [ngClass]="product.stock === 0 ? 'saas-badge--danger' : 'saas-badge--warning'"
+                  >
+                    {{ product.stock }} en stock
+                  </span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </section>
+
+      <section class="saas-card">
+        <div class="saas-card__head">
+          <h3>Commandes par statut</h3>
+        </div>
+
+        <div class="saas-card__body">
+          @if (ordersByStatus().length === 0) {
+            <p class="saas-empty__text">Aucune commande enregistrée.</p>
+          } @else {
+            <ul class="sd__status-list">
+              @for (entry of ordersByStatus(); track entry[0]) {
+                <li>
+                  <span class="saas-badge" [ngClass]="'saas-badge--' + statusTone(entry[0])">
+                    <span class="saas-badge__dot"></span>
+                    {{ statusLabel(entry[0]) }}
+                  </span>
+                  <strong class="saas-cell-strong">{{ entry[1] }}</strong>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </section>
+    </div>
+  </div>
+}

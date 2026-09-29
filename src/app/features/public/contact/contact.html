@@ -1,0 +1,151 @@
+<div class="contact">
+  <section class="contact-hero">
+    <div class="contact-hero__glow" aria-hidden="true"></div>
+    <h1 class="contact-hero__title reveal">Nous <span class="grad-text">contacter</span></h1>
+    <p class="contact-hero__subtitle reveal reveal--d1">
+      Une question, une suggestion ou un problème ? Notre équipe vous répond dans les meilleurs
+      délais.
+    </p>
+  </section>
+
+  <section class="contact-body">
+    <aside class="contact-info reveal">
+      <h2>Coordonnées</h2>
+
+      <div class="contact-info__item">
+        <span class="contact-info__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="M10 18s-6-4.7-6-9a6 6 0 1112 0c0 4.3-6 9-6 9z"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+            />
+            <circle cx="10" cy="9" r="2.2" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </span>
+        <div class="contact-info__text">
+          <span class="contact-info__label">Adresse</span>
+          <p>42 Rue de la Paix, 75002 Paris, France</p>
+        </div>
+      </div>
+
+      <div class="contact-info__item">
+        <span class="contact-info__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <rect
+              x="2.5"
+              y="4.5"
+              width="15"
+              height="11"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+            <path
+              d="M3 6l7 5 7-5"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <div class="contact-info__text">
+          <span class="contact-info__label">Email</span>
+          <p><a href="mailto:support@minishop.com">support@minishop.com</a></p>
+        </div>
+      </div>
+
+      <div class="contact-info__item">
+        <span class="contact-info__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="M4 3h3l1.5 4L6.5 8.5a10 10 0 005 5L13 12l4 1.5v3a1.5 1.5 0 01-1.6 1.5A14 14 0 012.5 4.6 1.5 1.5 0 014 3z"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <div class="contact-info__text">
+          <span class="contact-info__label">Téléphone</span>
+          <p><a href="tel:+33180000000">+33 1 80 00 00 00</a></p>
+        </div>
+      </div>
+
+      <div class="contact-info__item">
+        <span class="contact-info__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5" />
+            <path
+              d="M10 5.5V10l3 2"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+        <div class="contact-info__text">
+          <span class="contact-info__label">Horaires</span>
+          <p>Lun - Ven, 9h - 18h</p>
+        </div>
+      </div>
+    </aside>
+
+    <form class="contact-form reveal reveal--d1" [formGroup]="form" (ngSubmit)="handleSubmit()">
+      <div class="contact-form__row">
+        <div class="contact-form__field">
+          <label for="name">Nom</label>
+          <input id="name" formControlName="name" type="text" placeholder="Jean Dupont" required />
+        </div>
+        <div class="contact-form__field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            formControlName="email"
+            type="email"
+            placeholder="jean@exemple.com"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="contact-form__field">
+        <label for="subject">Sujet</label>
+        <input
+          id="subject"
+          formControlName="subject"
+          type="text"
+          placeholder="Ex : Question sur une commande"
+          required
+        />
+      </div>
+
+      <div class="contact-form__field">
+        <label for="message">Message</label>
+        <textarea
+          id="message"
+          formControlName="message"
+          rows="6"
+          placeholder="Décrivez votre demande..."
+          required
+        ></textarea>
+      </div>
+
+      <button type="submit" class="contact-form__submit">
+        Envoyer le message
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path
+            d="M3 10l13-5-3 12-3-5-5-2z"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
+          <path d="M10 12l6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </form>
+  </section>
+</div>

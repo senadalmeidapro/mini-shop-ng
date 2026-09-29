@@ -1,0 +1,170 @@
+<div class="saas-page-head">
+  <div class="saas-page-head__text">
+    <h2>Tableau de bord</h2>
+    <p>Vue d'ensemble de votre boutique et de vos performances.</p>
+  </div>
+</div>
+
+@if (isLoading()) {
+  <div class="saas-stats">
+    @for (i of [0, 1, 2, 3]; track i) {
+      <div class="saas-stat">
+        <span class="saas-skeleton" style="width: 40px; height: 40px; border-radius: 8px"></span>
+        <div class="saas-stat__body">
+          <span class="saas-skeleton" style="display: block; width: 64px; height: 22px"></span>
+          <span
+            class="saas-skeleton"
+            style="display: block; width: 90px; height: 12px; margin-top: 6px"
+          ></span>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="saas-stats">
+    @for (stat of stats(); track stat.key; let i = $index) {
+      <a class="saas-stat" [class.saas-stat--accent]="stat.accent" [routerLink]="stat.path">
+        <span class="saas-stat__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+            @if (stat.key === 'users') {
+              <path
+                d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-7a3 3 0 0 1 0 6 3 3 0 0 1 0-6ZM2 17a6 6 0 0 1 12 0v1H2v-1Zm14.5 1H22v-1a5.5 5.5 0 0 0-4.2-5.36A7 7 0 0 1 16.5 18Z"
+              />
+            } @else if (stat.key === 'orders') {
+              <path
+                fill-rule="evenodd"
+                d="M4 3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1h1a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h1V3Zm2 1h8V3H6v1Zm9 3v9H5V7h10Z"
+                clip-rule="evenodd"
+              />
+            } @else if (stat.key === 'products') {
+              <path
+                fill-rule="evenodd"
+                d="M10 2a1 1 0 0 1 .6.2l6 4A1 1 0 0 1 17 7v6a1 1 0 0 1-.4.8l-6 4a1 1 0 0 1-1.2 0l-6-4A1 1 0 0 1 3 13V7a1 1 0 0 1 .4-.8l6-4A1 1 0 0 1 10 2Zm0 2.2L5.5 7 10 9.8 14.5 7 10 4.2ZM5 8.7v4.6l4 2.7v-4.6L5 8.7Zm6 7.3 4-2.7V8.7l-4 2.7V16Z"
+                clip-rule="evenodd"
+              />
+            } @else {
+              <path
+                fill-rule="evenodd"
+                d="M2 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3H2V5Zm0 5h16v5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-5Zm3 6h2v1H5v-1Z"
+                clip-rule="evenodd"
+              />
+            }
+          </svg>
+        </span>
+
+        <span class="saas-stat__body">
+          <span class="saas-stat__value">{{ stat.value }}</span>
+          <span class="saas-stat__label">{{ stat.label }}</span>
+          <span class="saas-stat__hint">{{ stat.hint }}</span>
+        </span>
+      </a>
+    }
+  </div>
+}
+
+<div class="saas-split">
+  <section class="saas-card">
+    <div class="saas-card__head">
+      <h3>Chiffre d'affaires</h3>
+      <span class="saas-badge saas-badge--success">
+        <span class="saas-badge__dot"></span>
+        Paiements réussis
+      </span>
+    </div>
+
+    <div class="saas-card__body">
+      <div class="ad-revenue">
+        <span class="saas-stat__icon ad-revenue__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+            <path
+              d="M10 1a1 1 0 0 1 1 1v1.06A6 6 0 0 1 16.94 9H18a1 1 0 1 1 0 2h-1.06A6 6 0 0 1 11 16.94V18a1 1 0 1 1-2 0v-1.06A6 6 0 0 1 3.06 11H2a1 1 0 1 1 0-2h1.06A6 6 0 0 1 9 3.06V2a1 1 0 0 1 1-1Z"
+            />
+          </svg>
+        </span>
+        <div>
+          <p class="saas-muted">Revenus cumulés</p>
+          <strong class="ad-revenue__value">{{ totalRevenue() | number: '1.0-0' }} FCFA</strong>
+        </div>
+      </div>
+
+      <dl class="ad-metrics">
+        <div>
+          <dt>Panier moyen</dt>
+          <dd>{{ averageBasket() | number: '1.0-0' }} FCFA</dd>
+        </div>
+        <div>
+          <dt>Taux de réussite</dt>
+          <dd>{{ successRate() }} %</dd>
+        </div>
+        <div>
+          <dt>Commandes en attente</dt>
+          <dd>{{ pendingOrders() }}</dd>
+        </div>
+        <div>
+          <dt>Avis publiés</dt>
+          <dd>{{ totalReviews() }}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="saas-card">
+    <div class="saas-card__head">
+      <h3>Raccourcis</h3>
+    </div>
+
+    <div class="saas-card__body saas-card__body--flush">
+      <ul class="ad-links">
+        @for (link of quickLinks(); track link.path) {
+          <li>
+            <a class="ad-link" [routerLink]="link.path">
+              <span class="ad-link__icon" aria-hidden="true">
+                <svg viewBox="0 0 20 20" width="17" height="17" fill="currentColor">
+                  @if (link.label === 'Gérer les produits') {
+                    <path
+                      fill-rule="evenodd"
+                      d="M3 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2a3 3 0 0 1-2 2.83V17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7.83A3 3 0 0 1 2 5V3Zm1 4.83V16h10V7.83A3 3 0 0 0 15 5H5a3 3 0 0 0-1 2.83ZM5 4v1h10V4H5Z"
+                      clip-rule="evenodd"
+                    />
+                  } @else if (link.label === 'Traiter les commandes') {
+                    <path
+                      fill-rule="evenodd"
+                      d="M4 3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1h1a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h1V3Zm2 1h8V3H6v1Zm9 3v9H5V7h10Z"
+                      clip-rule="evenodd"
+                    />
+                  } @else if (link.label === 'Suivre les paiements') {
+                    <path
+                      fill-rule="evenodd"
+                      d="M2 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3H2V5Zm0 5h16v5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-5Zm3 6h2v1H5v-1Z"
+                      clip-rule="evenodd"
+                    />
+                  } @else {
+                    <path
+                      d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-7a3 3 0 0 1 0 6 3 3 0 0 1 0-6ZM2 17a6 6 0 0 1 12 0v1H2v-1Zm14.5 1H22v-1a5.5 5.5 0 0 0-4.2-5.36A7 7 0 0 1 16.5 18Z"
+                    />
+                  }
+                </svg>
+              </span>
+              <span class="ad-link__text">
+                <strong>{{ link.label }}</strong>
+                <span>{{ link.description }}</span>
+              </span>
+              <svg
+                class="ad-link__arrow"
+                viewBox="0 0 20 20"
+                width="15"
+                height="15"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="M7.5 3.5a1 1 0 0 1 1.4-.1l5 5a1 1 0 0 1 0 1.2l-5 5a1 1 0 0 1-1.4-1.2L11 10 7.5 6.5a1 1 0 0 1 0-1.4V3.5Z"
+                />
+              </svg>
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+</div>

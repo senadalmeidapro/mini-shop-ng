@@ -1,0 +1,13 @@
+.saas__toggle--menu {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .saas__toggle--menu {
+    display: grid;
+  }
+
+  .saas__toggle--collapse {
+    display: none;
+  }
+}

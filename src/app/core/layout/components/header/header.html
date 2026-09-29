@@ -1,0 +1,137 @@
+<nav class="nav">
+  <a
+    class="nav__brand"
+    [routerLink]="publicLinks[0].to"
+    aria-label="Mini Shop — Accueil"
+    [title]="publicLinks[0].label"
+  >
+    <span class="nav__logo" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+        <path d="M3 6h18" />
+        <path d="M16 10a4 4 0 0 1-8 0" />
+      </svg>
+    </span>
+    <span class="nav__wordmark">Mini<span>Shop</span></span>
+  </a>
+
+  @if (menuOpen()) {
+    <div class="nav__backdrop" (click)="closeMenu()"></div>
+  }
+
+  <div class="nav__links" [class.nav__links--open]="menuOpen()">
+    @for (link of publicLinks.slice(1); track link.label) {
+      <a
+        [routerLink]="link.to"
+        routerLinkActive="nav__links--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav__link"
+        (click)="closeMenu()"
+      >
+        {{ link.label }}
+      </a>
+    }
+  </div>
+
+  <div class="nav__right" [class.nav__right--mobile-open]="menuOpen()">
+    @if (auth.getAccessToken()) {
+      <a routerLink="/notifications" class="nav__icon" title="Notifications">
+        <svg
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        @if (unreadBadge(); as count) {
+          <span class="nav__badge">{{ count }}</span>
+        }
+      </a>
+      <a routerLink="/orders" class="nav__icon" title="Mon panier">
+        <svg
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="8" cy="21" r="1" />
+          <circle cx="19" cy="21" r="1" />
+          <path
+            d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+          />
+          <path d="M11 11l2 2 3-3" />
+        </svg>
+        @if (cartBadge(); as count) {
+          <span class="nav__badge">{{ count }}</span>
+        }
+      </a>
+      <a routerLink="/orders" class="nav__cta">Mes commandes</a>
+      @if (isAdmin()) {
+        <a routerLink="/admin" class="nav__cta nav__cta--ghost">Admin</a>
+      }
+      <a routerLink="/supplier" class="nav__cta nav__cta--ghost">Fournisseur</a>
+      <span class="nav__user">{{ auth.getUser()?.fullName ?? auth.getUser()?.email }}</span>
+      <button class="nav__logout" (click)="logout()">Déconnexion</button>
+    } @else {
+      <a routerLink="/auth/login" class="nav__cta nav__cta--ghost">Connexion</a>
+      <a routerLink="/auth/register" class="nav__cta">S'inscrire</a>
+    }
+  </div>
+  <button
+    class="nav__burger"
+    type="button"
+    [attr.aria-expanded]="menuOpen()"
+    aria-label="Menu"
+    (click)="toggleMenu()"
+  >
+    @if (!menuOpen()) {
+      <svg
+        viewBox="0 0 24 24"
+        width="22"
+        height="22"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="M4 6h16" />
+        <path d="M4 12h16" />
+        <path d="M4 18h16" />
+      </svg>
+    } @else {
+      <svg
+        viewBox="0 0 24 24"
+        width="22"
+        height="22"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="M6 6l12 12" />
+        <path d="M18 6L6 18" />
+      </svg>
+    }
+  </button>
+</nav>

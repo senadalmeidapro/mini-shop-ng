@@ -1,0 +1,29 @@
+<article class="product-card">
+  <a class="product-card__top" [routerLink]="['/products', product().id]">
+    @if (imageUrl(); as url) {
+      <img class="product-card__image" [src]="url" [alt]="product().name" />
+    }
+    <div class="product-card__shine" aria-hidden="true"></div>
+    <span class="product-card__peek">Voir le produit</span>
+  </a>
+
+  <div class="product-card__body">
+    <a class="product-card__name" [routerLink]="['/products', product().id]">{{
+      product().name
+    }}</a>
+    <p class="product-card__desc">{{ product().description }}</p>
+
+    <div class="product-card__footer">
+      <span class="product-card__price">{{ product().price }} FCFA</span>
+      <span
+        class="product-card__stock"
+        [ngClass]="{
+          'product-card__stock--low': product().stock < 5 && product().stock > 0,
+          'product-card__stock--out': product().stock === 0,
+        }"
+      >
+        Stock : {{ product().stock }}
+      </span>
+    </div>
+  </div>
+</article>
