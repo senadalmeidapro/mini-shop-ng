@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { AuthService } from '../../auth/auth.service';
+import { ThemeToggle } from '../../theme/theme-toggle';
 import { roleLabel } from '../../utils/roles';
 
 @Component({
   selector: 'app-supplier-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ThemeToggle],
   styleUrl: './supplier-layout.scss',
   templateUrl: './supplier-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

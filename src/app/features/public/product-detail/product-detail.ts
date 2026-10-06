@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { DecimalPipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { distinctUntilChanged, filter, finalize, map } from 'rxjs';
 
 import { API_CONFIG } from '../../../core/api/config';
@@ -20,7 +20,7 @@ import { ProductStore } from '../../data-access/product.store';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [FormsModule, NgClass],
+  imports: [DecimalPipe, FormsModule, NgClass, RouterLink],
   styleUrl: './product-detail.scss',
   templateUrl: './product-detail.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

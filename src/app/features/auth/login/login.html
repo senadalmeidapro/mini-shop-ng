@@ -1,82 +1,61 @@
 <div class="login">
-  <h2 class="login__title reveal reveal--d2">Se connecter</h2>
+  <h2 class="login__title saas-auth__title">Se connecter</h2>
+  <p class="saas-auth__subtitle">Accédez à votre espace personnel et vos commandes.</p>
 
   <form class="login__form" [formGroup]="form" (ngSubmit)="submit()">
     @if (error(); as message) {
-      <p class="form__error">{{ message }}</p>
+      <div class="saas-alert saas-alert--danger" role="alert">{{ message }}</div>
     }
 
-    <div class="login__field reveal reveal--d3">
-      <label for="email">Email</label>
+    <div class="saas-field">
+      <label for="email">Adresse e-mail</label>
       <input
         id="email"
+        class="saas-input"
         formControlName="email"
         type="email"
         autocomplete="email"
-        placeholder="example@email.com"
+        placeholder="vous@exemple.com"
         required
       />
       @if (form.controls.email.touched && form.controls.email.hasError('required')) {
-        <small>L'email est obligatoire</small>
-      }
-
-      @if (form.controls.email.touched && form.controls.email.hasError('email')) {
-        <small>L'email est invalide</small>
+        <span class="saas-field__error">L'email est obligatoire.</span>
+      } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
+        <span class="saas-field__error">L'email est invalide.</span>
       }
     </div>
-    <div class="login__field reveal reveal--d4">
-      <label for="password">Mot de passe</label>
-      <input id="password" formControlName="password" type="password" required />
+
+    <div class="saas-field">
+      <div class="login__label-row">
+        <label for="password">Mot de passe</label>
+        <a class="login__forgot" routerLink="/auth/reset-password-request">Mot de passe oublié ?</a>
+      </div>
+      <input
+        id="password"
+        class="saas-input"
+        formControlName="password"
+        type="password"
+        autocomplete="current-password"
+        required
+      />
       @if (form.controls.password.touched && form.controls.password.hasError('required')) {
-        <small>Le mot de passe est obligatoire</small>
+        <span class="saas-field__error">Le mot de passe est obligatoire.</span>
+      } @else if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+        <span class="saas-field__error">Au moins 8 caractères.</span>
       }
-
-      @if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
-        <small>Le mot de passe doit contenir au moins 8 caractères</small>
-      }
-      <a class="reset-password-request__link" routerLink="/auth/reset-password-request">
-        Mot de passe oublié ?
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="m9 18 6-6-6-6" />
-        </svg>
-      </a>
     </div>
 
-    <button class="login__submit reveal reveal--d5" type="submit" [disabled]="loading()">
-      @if (loading()) {
-        <span class="login__spinner"></span>
-      }
-      {{ loading() ? 'Connexion...' : 'Se connecter' }}
+    <button
+      class="saas-btn saas-btn--primary saas-btn--lg saas-btn--block login__submit"
+      type="submit"
+      [disabled]="loading()"
+    >
+      {{ loading() ? 'Connexion…' : 'Se connecter' }}
     </button>
   </form>
 
-  <p class="login__switch reveal reveal--d6">
+  <p class="login__switch saas-auth__switch">
     Pas encore de compte ?
-    <a class="login__link" routerLink="/auth/register">
-      Créer un compte
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="m9 18 6-6-6-6" />
-      </svg>
-    </a>
+    <a class="login__link" routerLink="/auth/register">Créer un compte</a>
   </p>
 </div>

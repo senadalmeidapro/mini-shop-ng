@@ -1,29 +1,51 @@
-<article class="product-card">
-  <a class="product-card__top" [routerLink]="['/products', product().id]">
+<article class="pcard">
+  <a
+    class="pcard__media"
+    [routerLink]="['/products', product().id]"
+    [attr.aria-label]="product().name"
+  >
     @if (imageUrl(); as url) {
-      <img class="product-card__image" [src]="url" [alt]="product().name" />
+      <img class="pcard__image" [src]="url" [alt]="product().name" loading="lazy" />
+    } @else {
+      <span class="pcard__placeholder" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="26" height="26" fill="currentColor">
+          <path
+            d="M3 4a1 1 0 0 1 1-1h3l1.5 1.5H16a1 1 0 0 1 1 1V15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4Z"
+          />
+        </svg>
+      </span>
     }
-    <div class="product-card__shine" aria-hidden="true"></div>
-    <span class="product-card__peek">Voir le produit</span>
+
+    @if (product().stock === 0) {
+      <span class="pcard__flag">Épuisé</span>
+    } @else if (product().stock <= 5) {
+      <span class="pcard__flag pcard__flag--low">Plus que {{ product().stock }}</span>
+    }
   </a>
 
-  <div class="product-card__body">
-    <a class="product-card__name" [routerLink]="['/products', product().id]">{{
-      product().name
-    }}</a>
-    <p class="product-card__desc">{{ product().description }}</p>
+  <div class="pcard__body">
+    <a class="pcard__name" [routerLink]="['/products', product().id]">{{ product().name }}</a>
 
-    <div class="product-card__footer">
-      <span class="product-card__price">{{ product().price }} FCFA</span>
-      <span
-        class="product-card__stock"
-        [ngClass]="{
-          'product-card__stock--low': product().stock < 5 && product().stock > 0,
-          'product-card__stock--out': product().stock === 0,
-        }"
-      >
-        Stock : {{ product().stock }}
-      </span>
+    @if (product().description) {
+      <p class="pcard__desc">{{ product().description }}</p>
+    }
+
+    <div class="pcard__footer">
+      <strong class="pcard__price">{{ product().price | number: '1.0-0' }} FCFA</strong>
+      <a class="pcard__cta" [routerLink]="['/products', product().id]" aria-label="Voir le produit">
+        <svg
+          viewBox="0 0 20 20"
+          width="14"
+          height="14"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path d="M4 10h12" stroke-linecap="round" />
+          <path d="m11 5 5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
     </div>
   </div>
 </article>

@@ -14,12 +14,13 @@ import { AuthService } from '../../../auth/auth.service';
 import { CartStore } from '../../../../features/data-access/cart.store';
 import { NotificationStore } from '../../../../features/data-access/notification.store';
 import { SupplierStore } from '../../../../features/data-access/supplier.store';
+import { ThemeToggle } from '../../../theme/theme-toggle';
 
 const REFRESH_INTERVAL = 30000;
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, ThemeToggle],
   styleUrl: './header.scss',
   templateUrl: './header.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

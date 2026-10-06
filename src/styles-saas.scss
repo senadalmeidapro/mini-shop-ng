@@ -502,6 +502,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-left: 10px;
 }
 
 .saas-stat__hint {
@@ -524,6 +525,15 @@
 .saas-stat--accent .saas-stat__icon {
   background: var(--color-primary);
   color: var(--color-primary-contrast);
+}
+
+.saas-stat--plain {
+  justify-content: center;
+  text-align: center;
+}
+
+.saas-stat--plain .saas-stat__value {
+  font-size: 1.6rem;
 }
 
 /* ------------------------------------------------------------------ *
@@ -1097,6 +1107,78 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+}
+
+.saas-spinner {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: saas-spin 0.7s linear infinite;
+}
+
+@keyframes saas-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Blocs d'authentification
+ * ------------------------------------------------------------------ */
+
+.saas-auth__title {
+  margin: 0 0 0.3rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--color-heading);
+  text-align: center;
+}
+
+.saas-auth__subtitle {
+  margin: 0 0 1.35rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--color-text-soft);
+  text-align: center;
+}
+
+.saas-auth__switch {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--color-text-soft);
+  text-align: center;
+}
+
+.saas-auth__meta {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background-soft);
+}
+
+.saas-auth__meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.84rem;
+}
+
+.saas-auth__meta-row dt {
+  color: var(--color-text-soft);
+}
+
+.saas-auth__meta-row dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 /* ------------------------------------------------------------------ *

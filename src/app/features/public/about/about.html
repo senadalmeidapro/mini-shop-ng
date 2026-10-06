@@ -1,29 +1,30 @@
 <div class="about">
-  <section class="about-hero">
-    <div class="about-hero__glow" aria-hidden="true"></div>
-    <h1 class="about-hero__title reveal">A propos de <span class="grad-text">Mini Shop</span></h1>
-    <p class="about-hero__subtitle reveal reveal--d1">
+  <header class="about-hero">
+    <h1 class="about-hero__title">À propos de Mini Shop</h1>
+    <p class="about-hero__subtitle">
       Nous construisons une expérience d'achat en ligne simple, fiable et accessible à tous.
     </p>
-  </section>
+  </header>
 
-  <section class="about-story">
-    <div class="about-story__content reveal">
-      <span class="about-story__label">
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="currentColor" stroke-width="1.5" />
-          <path
-            d="M12 8l-3 5h3"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <circle cx="14" cy="6" r="1" fill="currentColor" />
+  <section class="saas-card about-story">
+    <div class="saas-card__body">
+      <span class="saas-label about-story__label">
+        <svg
+          viewBox="0 0 20 20"
+          width="15"
+          height="15"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          aria-hidden="true"
+        >
+          <circle cx="10" cy="10" r="8" />
+          <path d="M12 8 9 13h3" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="14" cy="6" r="1" fill="currentColor" stroke="none" />
         </svg>
         Notre histoire
       </span>
-      <h2>Un projet né de la passion du commerce</h2>
+      <h2 class="about-story__title">Un projet né de la passion du commerce</h2>
       <p>
         Mini Shop est né en 2024 de l'envie de créer une boutique en ligne moderne, rapide et
         accessible. Notre objectif : offrir une expérience d'achat fluide, des produits de qualité à
@@ -37,84 +38,86 @@
   </section>
 
   <section class="about-values">
-    <h2 class="reveal">Nos valeurs</h2>
+    <h2 class="about-values__title">Nos valeurs</h2>
+
     <div class="about-values__grid">
-      @for (val of values; track val.title; let idx = $index) {
-        <div class="value-card reveal" [ngClass]="'reveal--d' + revealDelay(idx)">
-          <span class="value-card__icon" aria-hidden="true">
-            @if (val.title === 'Qualité') {
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 3l2.2 5.1 5.5.5-4.2 3.7 1.3 5.4L12 15l-4.8 2.7 1.3-5.4-4.2-3.7 5.5-.5L12 3z"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            } @else if (val.title === 'Confiance') {
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 3l7 3v5c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V6l7-3z"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M9 12l2 2 4-4"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            } @else {
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 21s-7-4.4-7-10a4.5 4.5 0 018-2.8A4.5 4.5 0 0119 11c0 5.6-7 10-7 10z"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            }
-          </span>
-          <h3 class="value-card__title">{{ val.title }}</h3>
-          <p class="value-card__desc">{{ val.desc }}</p>
-        </div>
+      @for (value of values; track value.title) {
+        <article class="saas-card">
+          <div class="saas-card__body">
+            <span class="saas-stat__icon" aria-hidden="true">
+              @switch (value.title) {
+                @case ('Qualité') {
+                  <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+                    <path
+                      d="m10 1.8 2.2 4.7 5.2.6-3.9 3.5 1.1 5.1L10 13.3l-4.6 2.4 1.1-5.1-3.9-3.5 5.2-.6L10 1.8Z"
+                    />
+                  </svg>
+                }
+                @case ('Confiance') {
+                  <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 2 3.5 4.6V10c0 4 2.7 7.3 6.5 8.7 3.8-1.4 6.5-4.7 6.5-8.7V4.6L10 2Zm3.4 7.3-3.9 3.9a1 1 0 0 1-1.4 0L6.6 11.7l1.4-1.4 1.1 1.1 3.2-3.2 1.4 1.4Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                }
+                @default {
+                  <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 17.5s-6.2-4-6.2-8.9A3.9 3.9 0 0 1 10 5.4a3.9 3.9 0 0 1 6.2 3.2c0 4.9-6.2 8.9-6.2 8.9Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                }
+              }
+            </span>
+
+            <h3 class="value-card__title">{{ value.title }}</h3>
+            <p class="value-card__desc">{{ value.desc }}</p>
+          </div>
+        </article>
       }
     </div>
   </section>
 
   <section class="about-stats">
-    <h2 class="reveal">Mini Shop en chiffres</h2>
-    <div class="about-stats__grid">
-      @for (stat of stats; track stat.label; let idx = $index) {
-        <div class="stat-card reveal" [ngClass]="'reveal--d' + revealDelay(idx)">
-          <strong class="stat-card__value">{{ stat.value }}</strong>
-          <span class="stat-card__label">{{ stat.label }}</span>
-          <span class="stat-card__bar" aria-hidden="true"></span>
+    <h2 class="about-stats__title">Mini Shop en chiffres</h2>
+
+    <div class="saas-stats">
+      @for (stat of stats; track stat.label) {
+        <div class="saas-stat saas-stat--plain">
+          <span class="saas-stat__body">
+            <span class="saas-stat__value">{{ stat.value }}</span>
+            <span class="saas-stat__label">{{ stat.label }}</span>
+          </span>
         </div>
       }
     </div>
   </section>
 
-  <section class="about-cta reveal">
-    <div class="about-cta__shine" aria-hidden="true"></div>
-    <div class="about-cta__blob" aria-hidden="true"></div>
-    <h2>Envie d'en savoir plus ?</h2>
-    <p>Parcourez notre catalogue et découvrez ce que nous avons préparé pour vous.</p>
-    <a class="about-cta__btn" routerLink="/products">
-      Voir les produits
-      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path
-          d="M5 10h10M11 6l4 4-4 4"
+  <section class="saas-card about-cta">
+    <div class="saas-card__body">
+      <h2 class="about-cta__title">Envie d'en savoir plus ?</h2>
+      <p class="about-cta__text">
+        Parcourez notre catalogue et découvrez ce que nous avons préparé pour vous.
+      </p>
+      <a class="saas-btn saas-btn--primary saas-btn--lg about-cta__btn" routerLink="/products">
+        Voir les produits
+        <svg
+          viewBox="0 0 20 20"
+          width="16"
+          height="16"
+          fill="none"
           stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </a>
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path d="M4 10h12" stroke-linecap="round" />
+          <path d="m11 5 5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+    </div>
   </section>
 </div>

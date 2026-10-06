@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { API_CONFIG } from '../../../core/api/config';
@@ -21,13 +21,12 @@ import { ProductStore } from '../../data-access/product.store';
 
 @Component({
   selector: 'app-home',
-  imports: [NgClass, RouterLink],
+  imports: [DecimalPipe, RouterLink],
   styleUrl: './home.scss',
   templateUrl: './home.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Home implements OnInit {
-  private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
   private readonly productStore = inject(ProductStore);
   private readonly cartStore = inject(CartStore);
@@ -39,11 +38,29 @@ export class Home implements OnInit {
   protected readonly cartLoading = signal<Record<string, boolean>>({});
   protected readonly productsLoading = this.productStore.isLoading;
 
+  protected readonly features = [
+    {
+      icon: 'truck',
+      title: 'Livraison rapide',
+      text: 'Expédition sous 24h pour tous les produits disponibles en stock.',
+    },
+    {
+      icon: 'shield',
+      title: 'Paiement sécurisé',
+      text: 'Transactions chiffrées et protégées pour une tranquillité totale.',
+    },
+    {
+      icon: 'support',
+      title: 'Support 7j/7',
+      text: 'Une équipe à votre écoute pour répondre à toutes vos questions.',
+    },
+  ];
+
   protected readonly featuredProducts = computed(() =>
     this.productStore
       .products()
       .filter((product) => product.stock > 0)
-      .slice(0, 8),
+      .slice(0, 5),
   );
 
   ngOnInit(): void {
@@ -52,18 +69,6 @@ export class Home implements OnInit {
     }
 
     this.productStore.getProducts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
-  }
-
-  protected formatPrice(value: number): string {
-    return value.toLocaleString('fr-FR');
-  }
-
-  protected revealDelay(index: number): number {
-    return Math.min(index + 1, 6);
-  }
-
-  protected goToProduct(id: string): void {
-    this.router.navigate(['/products', id]);
   }
 
   protected addToCart(event: Event, product: Product): void {

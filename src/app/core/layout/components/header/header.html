@@ -43,6 +43,8 @@
   </div>
 
   <div class="nav__right" [class.nav__right--mobile-open]="menuOpen()">
+    <app-theme-toggle></app-theme-toggle>
+
     @if (auth.getAccessToken()) {
       <a routerLink="/notifications" class="nav__icon" title="Notifications">
         <svg

@@ -1,100 +1,12 @@
-.verify {
-  text-align: center;
-}
-
 .verify__title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--color-heading);
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.9rem;
 }
 
 .verify__status {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  padding: 1.25rem 1rem;
-  border-radius: var(--radius-lg);
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--color-text-soft);
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
-}
-
-.verify__status--success {
-  color: var(--color-primary);
-  border-color: var(--color-primary-soft);
-  background: var(--color-primary-soft);
-}
-
-.verify__status--error {
-  color: var(--color-danger);
-  border-color: var(--color-danger-soft);
-  background: var(--color-danger-soft);
-}
-
-.verify__badge {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.verify__badge--success {
-  background: var(--gradient-brand);
-  color: var(--color-primary-contrast);
-}
-
-.verify__badge--error {
-  background: var(--color-danger);
-  color: var(--color-danger-contrast);
-}
-
-.verify__spinner {
-  display: block;
-  width: 28px;
-  height: 28px;
-  border: 3px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  margin-bottom: 1.2rem;
 }
 
 .verify__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.7rem 1.75rem;
-  border-radius: var(--radius-pill);
-  background: var(--gradient-brand);
-  color: var(--color-primary-contrast);
-  font-size: 0.95rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition:
-    transform var(--duration) var(--ease-out),
-    box-shadow var(--duration) var(--ease-out);
-}
-
-.verify__btn svg {
-  transition: transform var(--duration-fast) var(--ease-out);
-}
-
-.verify__btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
-}
-
-.verify__btn:hover svg {
-  transform: translateX(3px);
+  margin-top: 0.35rem;
 }

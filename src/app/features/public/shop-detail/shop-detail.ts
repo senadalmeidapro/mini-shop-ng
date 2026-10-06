@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { distinctUntilChanged, filter, finalize, map } from 'rxjs';
 
 import { ShopStore } from '../../data-access/shop.store';
@@ -16,7 +16,7 @@ import { ProductCard } from '../../../shared/product-card/product-card';
 
 @Component({
   selector: 'app-shop-detail',
-  imports: [ProductCard],
+  imports: [ProductCard, RouterLink],
   styleUrl: './shop-detail.scss',
   templateUrl: './shop-detail.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

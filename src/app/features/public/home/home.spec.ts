@@ -66,9 +66,7 @@ describe('Home', () => {
     request.flush(page([product(), product({ id: 'p2', name: 'Souris' })]));
 
     fixture.detectChanges();
-    expect(
-      fixture.nativeElement.querySelectorAll('.product-card:not(.product-card--skeleton)').length,
-    ).toBe(2);
+    expect(fixture.nativeElement.querySelectorAll('.home__item').length).toBe(2);
   });
 
   it('shows the empty state when there is no product in stock', () => {
@@ -78,7 +76,9 @@ describe('Home', () => {
       .flush(page([product({ stock: 0 })]));
 
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.home__empty')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.saas-empty__title')?.textContent).toContain(
+      'Aucun produit disponible',
+    );
   });
 
   it('warns instead of adding to the cart when the visitor is anonymous', () => {

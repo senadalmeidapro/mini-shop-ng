@@ -1,139 +1,101 @@
-<div class="product-list">
-  <section class="product-list__hero reveal">
-    <span class="product-list__badge">Catalogue</span>
-
-    <h1 class="product-list__title">Nos <span class="grad-text">produits</span></h1>
-
-    <p class="product-list__subtitle">
+<div class="catalog">
+  <header class="catalog__head">
+    <span class="saas-badge saas-badge--info">Catalogue</span>
+    <h1 class="catalog__title">Tous nos produits</h1>
+    <p class="catalog__subtitle">
       Découvrez notre sélection et trouvez le produit qu'il vous faut.
     </p>
+  </header>
 
-    <div class="product-list__meta">
-      <span class="product-list__count">
-        <svg
-          viewBox="0 0 24 24"
-          width="15"
-          height="15"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-          <path d="M3 6h18" />
-          <path d="M16 10a4 4 0 0 1-8 0" />
-        </svg>
-        {{ filteredProducts().length }} produit{{ filteredProducts().length > 1 ? 's' : '' }}
-        @if (hasFilters()) {
-          · filtre{{ hasBothFilters() ? 's' : '' }} actif
-        }
-      </span>
-    </div>
-  </section>
-
-  <div class="product-list__toolbar reveal reveal--d1">
-    <label class="product-list__field">
+  <div class="saas-toolbar">
+    <label class="saas-toolbar__search">
       <svg
-        class="product-list__field-icon"
-        viewBox="0 0 24 24"
+        viewBox="0 0 20 20"
+        width="15"
+        height="15"
         fill="none"
         stroke="currentColor"
         stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
         aria-hidden="true"
       >
-        <circle cx="11" cy="11" r="8" />
-        <path d="m21 21-4.3-4.3" />
+        <circle cx="9" cy="9" r="6" />
+        <path d="m13.5 13.5 3 3" stroke-linecap="round" />
       </svg>
       <input
         type="search"
-        class="product-list__search"
-        placeholder="Rechercher un produit..."
+        class="saas-input"
+        placeholder="Rechercher un produit…"
         [ngModel]="searchQuery()"
         (ngModelChange)="onSearch($event)"
       />
     </label>
 
-    <label class="product-list__field product-list__field--select">
-      <svg
-        class="product-list__field-icon"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M4 6h16" />
-        <path d="M7 12h10" />
-        <path d="M10 18h4" />
-      </svg>
-      <select
-        class="product-list__select"
-        [ngModel]="selectedCategoryId()"
-        (ngModelChange)="onCategoryChange($event)"
-      >
-        <option value="">Toutes les catégories</option>
-        @for (cat of categories(); track cat.id) {
-          <option [value]="cat.id">{{ cat.name }}</option>
-        }
-      </select>
-      <svg
-        class="product-list__caret"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="m6 9 6 6 6-6" />
-      </svg>
-    </label>
+    <select
+      class="saas-select saas-toolbar__select"
+      [ngModel]="selectedCategoryId()"
+      (ngModelChange)="onCategoryChange($event)"
+      aria-label="Filtrer par catégorie"
+    >
+      <option value="">Toutes les catégories</option>
+      @for (category of categories(); track category.id) {
+        <option [value]="category.id">{{ category.name }}</option>
+      }
+    </select>
+
+    <span class="saas-badge saas-badge--neutral catalog__count">
+      {{ filteredProducts().length }} produit{{ filteredProducts().length > 1 ? 's' : '' }}
+    </span>
+
+    @if (hasFilters()) {
+      <button type="button" class="saas-btn saas-btn--ghost saas-btn--sm" (click)="clearFilters()">
+        Réinitialiser
+      </button>
+    }
   </div>
 
-  @if (filteredProducts().length) {
-    <div class="product-list__grid">
-      @for (product of filteredProducts(); track product.id; let index = $index) {
-        <div class="product-list__card reveal" [ngClass]="'reveal--d' + revealDelay(index)">
-          <app-product-card [product]="product" />
-        </div>
+  @if (filteredProducts().length > 0) {
+    <div class="catalog__grid">
+      @for (product of filteredProducts(); track product.id) {
+        <app-product-card [product]="product" />
       }
     </div>
   } @else {
-    <div class="product-list__empty reveal reveal--d1">
-      <span class="product-list__empty-icon" aria-hidden="true">
-        <svg
-          viewBox="0 0 24 24"
-          width="26"
-          height="26"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="m13.5 8.5-5 5" />
-          <path d="m8.5 8.5 5 5" />
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
-      </span>
-      <strong class="product-list__empty-title">
-        {{ hasFilters() ? 'Aucun résultat trouvé' : 'Boutique en préparation' }}
-      </strong>
-      <span class="product-list__empty-text">
-        {{
-          hasFilters()
-            ? 'Aucun produit ne correspond à votre recherche.'
-            : 'Aucun produit disponible.'
-        }}
-      </span>
+    <div class="saas-card">
+      <div class="saas-card__body">
+        <div class="saas-empty">
+          <span class="saas-empty__icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20" width="22" height="22" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M8.5 3a5.5 5.5 0 1 1-4.2 8 1 1 0 0 1 1.5 1.3A7.5 7.5 0 1 0 8.5 3Z"
+                clip-rule="evenodd"
+              />
+              <path
+                d="M3.6 2.6a1 1 0 0 1 1.4 1.4l-.9.9 2.9 2.9a1 1 0 1 1-1.4 1.4l-2.9-2.9-.9.9a1 1 0 0 1-1.4-1.4Z"
+              />
+            </svg>
+          </span>
+          <p class="saas-empty__title">
+            {{ hasFilters() ? 'Aucun résultat trouvé' : 'Boutique en préparation' }}
+          </p>
+          <p class="saas-empty__text">
+            {{
+              hasFilters()
+                ? 'Aucun produit ne correspond à votre recherche.'
+                : 'Aucun produit disponible pour le moment.'
+            }}
+          </p>
+          @if (hasFilters()) {
+            <button
+              type="button"
+              class="saas-btn saas-btn--secondary saas-empty__action"
+              (click)="clearFilters()"
+            >
+              Réinitialiser les filtres
+            </button>
+          }
+        </div>
+      </div>
     </div>
   }
 </div>

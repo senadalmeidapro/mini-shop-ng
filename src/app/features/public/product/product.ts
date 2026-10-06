@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +16,7 @@ import { ProductCard } from '../../../shared/product-card/product-card';
 
 @Component({
   selector: 'app-product',
-  imports: [FormsModule, NgClass, ProductCard],
+  imports: [FormsModule, ProductCard],
   styleUrl: './product.scss',
   templateUrl: './product.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -73,7 +72,8 @@ export class Product implements OnInit {
     this.selectedCategoryId.set(value);
   }
 
-  protected revealDelay(index: number): number {
-    return Math.min(index + 1, 6);
+  protected clearFilters(): void {
+    this.searchQuery.set('');
+    this.selectedCategoryId.set('');
   }
 }

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,7 +14,7 @@ import { ShopStore } from '../../data-access/shop.store';
 
 @Component({
   selector: 'app-shop',
-  imports: [NgClass, RouterLink],
+  imports: [RouterLink],
   styleUrl: './shop.scss',
   templateUrl: './shop.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,9 +47,5 @@ export class Shop implements OnInit {
 
   protected productCount(shopId: string): number {
     return this.productCountByShop().get(shopId) ?? 0;
-  }
-
-  protected revealDelay(index: number): number {
-    return Math.min(index + 1, 6);
   }
 }

@@ -95,7 +95,9 @@ describe('app routes', () => {
     const harness = await RouterTestingHarness.create('/supplier');
     await harness.fixture.whenStable();
 
-    expect(harness.routeNativeElement?.querySelector('.saas-card')?.textContent).toContain('boutique');
+    expect(harness.routeNativeElement?.querySelector('.saas-card')?.textContent).toContain(
+      'boutique',
+    );
   });
 
   it('falls back to the home page on an unknown url', async () => {

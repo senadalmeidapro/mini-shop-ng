@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { Product } from '../../core/models';
 
 @Component({
   selector: 'app-product-card',
-  imports: [NgClass, RouterLink],
+  imports: [DecimalPipe, RouterLink],
   styleUrl: './product-card.scss',
   templateUrl: './product-card.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

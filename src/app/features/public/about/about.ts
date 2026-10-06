@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -14,7 +13,7 @@ interface AboutStat {
 
 @Component({
   selector: 'app-about',
-  imports: [NgClass, RouterLink],
+  imports: [RouterLink],
   styleUrl: './about.scss',
   templateUrl: './about.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,8 +40,4 @@ export class About {
     { value: '10K+', label: 'Clients satisfaits' },
     { value: '99%', label: 'Taux de satisfaction' },
   ];
-
-  protected revealDelay(index: number): number {
-    return Math.min(index + 1, 6);
-  }
 }

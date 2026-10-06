@@ -1,80 +1,77 @@
 <div class="register">
-  <h2 class="register__title reveal reveal--d2">Créer un compte</h2>
+  <h2 class="register__title saas-auth__title">Créer un compte</h2>
+  <p class="saas-auth__subtitle">
+    Inscrivez-vous gratuitement pour commander et suivre vos achats.
+  </p>
 
   <form class="register__form" [formGroup]="form" (ngSubmit)="submit()">
     @if (error(); as message) {
-      <p class="form__error">{{ message }}</p>
+      <div class="saas-alert saas-alert--danger" role="alert">{{ message }}</div>
     }
 
-    <div class="register__field reveal reveal--d3">
+    <div class="saas-field register__field">
       <label for="fullname">Nom complet</label>
-      <input id="fullname" formControlName="fullName" type="text" autocomplete="name" />
+      <input
+        id="fullname"
+        class="saas-input"
+        formControlName="fullName"
+        type="text"
+        autocomplete="name"
+        placeholder="Awa Diallo"
+        required
+      />
       @if (form.controls.fullName.touched && form.controls.fullName.hasError('required')) {
-        <small>Le nom complet est obligatoire</small>
+        <span class="saas-field__error">Le nom complet est obligatoire.</span>
       }
     </div>
-    <div class="register__field reveal reveal--d4">
-      <label for="email">Email</label>
+
+    <div class="saas-field register__field">
+      <label for="email">Adresse e-mail</label>
       <input
         id="email"
+        class="saas-input"
         formControlName="email"
         type="email"
         autocomplete="email"
-        placeholder="example@email.com"
+        placeholder="vous@exemple.com"
         required
       />
       @if (form.controls.email.touched && form.controls.email.hasError('required')) {
-        <small>L'email est obligatoire</small>
-      }
-
-      @if (form.controls.email.touched && form.controls.email.hasError('email')) {
-        <small>L'email est invalide</small>
+        <span class="saas-field__error">L'email est obligatoire.</span>
+      } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
+        <span class="saas-field__error">L'email est invalide.</span>
       }
     </div>
-    <div class="register__field reveal reveal--d5">
+
+    <div class="saas-field register__field">
       <label for="password">Mot de passe</label>
       <input
         id="password"
+        class="saas-input"
         formControlName="password"
         type="password"
         autocomplete="new-password"
-        placeholder="8+ caractères, chiffres et symboles"
+        placeholder="8 caractères minimum"
         required
       />
       @if (form.controls.password.touched && form.controls.password.hasError('required')) {
-        <small>Le mot de passe est obligatoire</small>
-      }
-
-      @if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
-        <small>Le mot de passe doit contenir au moins 8 caractères</small>
+        <span class="saas-field__error">Le mot de passe est obligatoire.</span>
+      } @else if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+        <span class="saas-field__error">Au moins 8 caractères.</span>
       }
     </div>
 
-    <button class="register__submit reveal reveal--d6" type="submit" [disabled]="loading()">
-      @if (loading()) {
-        <span class="register__spinner"></span>
-      }
-      {{ loading() ? 'Inscription...' : "S'inscrire" }}
+    <button
+      class="saas-btn saas-btn--primary saas-btn--lg saas-btn--block register__submit"
+      type="submit"
+      [disabled]="loading()"
+    >
+      {{ loading() ? 'Inscription…' : "S'inscrire" }}
     </button>
   </form>
 
-  <p class="register__switch reveal reveal--d6">
+  <p class="register__switch saas-auth__switch">
     Déjà un compte ?
-    <a class="register__link" routerLink="/auth/login">
-      Se connecter
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="m9 18 6-6-6-6" />
-      </svg>
-    </a>
+    <a class="register__link" routerLink="/auth/login">Se connecter</a>
   </p>
 </div>
