@@ -114,6 +114,40 @@ describe('PaymentStore', () => {
     expect(store.payments()).toEqual([]);
   });
 
+  it('completes checkout: creates then confirms the payment', () => {
+    let result: boolean | undefined;
+    store.completeCheckout('cart1', { method: 'card' }).subscribe((ok) => (result = ok));
+
+    const created = http.expectOne(ENDPOINTS.payments.create('cart1'));
+    expect(created.request.method).toBe('POST');
+    created.flush(payment());
+    expect(store.payments().length).toBe(1);
+
+    const confirmed = http.expectOne(ENDPOINTS.payments.update('pay1'));
+    expect(confirmed.request.method).toBe('PATCH');
+    expect(confirmed.request.body).toEqual({ method: 'card', status: 'succeeded' });
+    confirmed.flush(payment({ status: 'succeeded' }));
+
+    expect(result).toBe(true);
+    expect(store.payments()[0].status).toBe('succeeded');
+    expect(toast.toasts()[0].message).toBe('Paiement confirmé');
+  });
+
+  it('keeps the payment pending when the confirmation fails', () => {
+    let result: boolean | undefined;
+    store.completeCheckout('cart1', { method: 'card' }).subscribe((ok) => (result = ok));
+
+    http.expectOne(ENDPOINTS.payments.create('cart1')).flush(payment());
+
+    http
+      .expectOne(ENDPOINTS.payments.update('pay1'))
+      .flush({ message: 'Déjà capturé' }, { status: 409, statusText: 'Conflict' });
+
+    expect(result).toBe(false);
+    expect(store.payments()[0].status).toBe('pending');
+    expect(toast.toasts()[0].message).toBe('Déjà capturé');
+  });
+
   it('updates a payment in the list and the current one', () => {
     store.getPayments().subscribe();
     http.expectOne((req) => req.url === ENDPOINTS.payments.list).flush(page([payment()]));

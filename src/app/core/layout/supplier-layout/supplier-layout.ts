@@ -7,7 +7,7 @@ import { roleLabel } from '../../utils/roles';
 
 @Component({
   selector: 'app-supplier-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, ThemeToggle],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   styleUrl: './supplier-layout.scss',
   templateUrl: './supplier-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

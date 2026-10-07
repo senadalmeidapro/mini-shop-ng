@@ -62,7 +62,7 @@ export class CartList {
     this.paying.set(true);
 
     this.paymentStore
-      .createPayment(cartId, {
+      .completeCheckout(cartId, {
         method: 'card',
         shippingAddress: {
           fullName: this.auth.getUser()?.fullName ?? 'Client',

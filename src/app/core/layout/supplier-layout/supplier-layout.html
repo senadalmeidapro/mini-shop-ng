@@ -135,10 +135,8 @@
           </svg>
         </a>
 
-        <app-theme-toggle></app-theme-toggle>
-
         <a routerLink="/profile" class="saas__user">
-          <span class="saas-avatar saas-avatar--sm">{{ initials() }}</span>
+          <!-- <span class="saas-avatar saas-avatar--sm">{{ initials() }}</span> -->
           <span class="saas__user-meta">
             <strong>{{ user()?.fullName ?? 'Vendeur' }}</strong>
             <span>{{ role() }}</span>

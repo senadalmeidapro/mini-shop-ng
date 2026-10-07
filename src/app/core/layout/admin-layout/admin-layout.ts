@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
-import { ThemeToggle } from '../../theme/theme-toggle';
 import { roleLabel } from '../../utils/roles';
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, ThemeToggle],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet],
   styleUrl: './admin-layout.scss',
   templateUrl: './admin-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { EMPTY, Observable, catchError, map, of, tap } from 'rxjs';
+import { EMPTY, Observable, catchError, map, of, switchMap, tap } from 'rxjs';
 
 import { ENDPOINTS } from '../../core/api/endpoints';
 import { Http } from '../../core/api/http';
@@ -72,6 +72,42 @@ export class PaymentStore {
         this.toast.success('Paiement créé avec succès');
       }),
       map(() => true),
+      catchError((error: unknown) => {
+        this.toast.apiError(error, 'Impossible de créer le paiement');
+        return of(false);
+      }),
+    );
+  }
+
+  completeCheckout(cartId: string, data: PaymentDto): Observable<boolean> {
+    return this.http.post<Payment>(ENDPOINTS.payments.create(cartId), data).pipe(
+      switchMap((payment) => {
+        this.list.update((payments) => [...payments, payment]);
+
+        return this.http
+          .patch<Payment>(ENDPOINTS.payments.update(payment.id), {
+            method: data.method,
+            status: 'succeeded',
+          })
+          .pipe(
+            map((confirmed) => {
+              this.list.update((payments) =>
+                payments.map((item) => (item.id === confirmed.id ? confirmed : item)),
+              );
+
+              if (this.current()?.id === confirmed.id) {
+                this.current.set(confirmed);
+              }
+
+              this.toast.success('Paiement confirmé');
+              return true;
+            }),
+            catchError((error: unknown) => {
+              this.toast.apiError(error, 'Impossible de confirmer le paiement');
+              return of(false);
+            }),
+          );
+      }),
       catchError((error: unknown) => {
         this.toast.apiError(error, 'Impossible de créer le paiement');
         return of(false);
