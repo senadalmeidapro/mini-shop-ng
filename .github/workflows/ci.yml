@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run build
+      - run: npm test
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: mini-shop-ng:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Smoke test nginx (SPA fallback + /api proxy)
+        run: |
+          docker run -d --name web -p 8080:8080 \
+            -e PORT=8080 -e API_UPSTREAM=http://backend.invalid:3000 \
+            mini-shop-ng:ci
+          sleep 5
+          docker logs web
+          # index.html is served and revalidated
+          curl -fsS http://localhost:8080/ | grep -q "<app-root"
+          curl -fsS -D - -o /dev/null http://localhost:8080/ | grep -qi "no-cache"
+          # unknown routes fall back to the Angular router (SPA)
+          curl -fsS http://localhost:8080/admin/products | grep -q "<app-root"
+          # /api is proxied, not served as static content (no backend => 502)
+          code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/api/products)
+          test "$code" = "502"

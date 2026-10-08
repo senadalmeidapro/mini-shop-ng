@@ -36,6 +36,46 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+## Production deployment
+
+The app is a static SPA served by nginx, with the backend exposed on the **same origin under `/api`**. The multi-stage `Dockerfile` builds the app and serves it with nginx; `railway.json` configures the service.
+
+### Railway
+
+1. Push the repository to GitHub, then on [Railway](https://railway.com) create a project and **Deploy from GitHub repo** (the `Dockerfile` is detected automatically).
+2. Set the environment variable for the `/api` reverse proxy on the frontend service, pointing at your backend service:
+
+   ```bash
+   API_UPSTREAM=http://<backend-service>.railway.internal:3000
+   ```
+
+3. Generate a public domain under **Networking**.
+
+Notes:
+
+- Railway injects `PORT` at runtime; nginx listens on `${PORT}` (`nginx/default.conf.template`).
+- `/api/*` is proxied to `API_UPSTREAM` (the `/api` prefix is stripped), so the frontend and backend share one origin.
+- DNS is resolved lazily at request time: the frontend starts even if the backend is not up yet, but API calls fail until the backend exists.
+- `railway.json` defines the healthcheck (`/`) and the restart policy.
+
+### Local Docker / Compose
+
+```bash
+docker build -t mini-shop-ng .
+docker run -d -p 8080:80 -e API_UPSTREAM=http://host.docker.internal:3000 mini-shop-ng
+# or, with the backend configured in docker-compose.yml
+docker compose up --build   # app on http://localhost:8080
+```
+
+### Sub-path
+
+Serving under a sub-path: build with `ng build --base-href /sub-path/`.
+
+### CI
+
+`.github/workflows/ci.yml` runs on every push and pull request: Prettier check,
+unit tests, production build, and a Docker image build.
+
 ## Running unit tests
 
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:

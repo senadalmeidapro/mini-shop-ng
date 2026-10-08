@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    image: mini-shop-ng:latest
+    ports:
+      - '8080:80'
+    environment:
+      # Backend upstream for the /api reverse proxy. Use a Docker service
+      # name (http://backend:3000) or the host (http://host.docker.internal:3000).
+      # On Railway use the internal DNS: http://<backend-service>.railway.internal:3000
+      API_UPSTREAM: http://backend:3000
+    restart: unless-stopped
+
+  # Your JSON Server backend lives in its own repository. Uncomment and adapt
+  # this service so `docker compose up` starts everything at once:
+  #
+  # backend:
+  #   image: node:22-alpine
+  #   working_dir: /app
+  #   volumes:
+  #     - ./server:/app
+  #   command: sh -c "npm ci && npx json-server --watch db.json --port 3000"
+  #   restart: unless-stopped

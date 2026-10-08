@@ -1,13 +1,8 @@
-const DEV_PROXY_PREFIX = '/api';
-
 const resolveBaseURL = (): string => {
-  if (typeof window === 'undefined') {
-    return 'http://localhost:3000';
-  }
-
-  const isDevServer = window.location.port === '4200';
-
-  return isDevServer ? DEV_PROXY_PREFIX : 'http://localhost:3000';
+  // Same-origin in every environment: the dev server forwards /api to the
+  // backend (proxy.conf.json) and nginx does the same in production
+  // (nginx/default.conf.template).
+  return '/api';
 };
 
 export const API_CONFIG = {

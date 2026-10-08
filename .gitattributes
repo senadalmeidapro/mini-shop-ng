@@ -1,0 +1,8 @@
+# Keep shell scripts and nginx templates LF so containers run them on Linux.
+*.sh text eol=lf
+nginx/*.template text eol=lf
+Dockerfile text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.html text eol=lf
+*.scss text eol=lf
