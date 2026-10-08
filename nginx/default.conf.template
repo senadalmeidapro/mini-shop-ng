@@ -18,7 +18,9 @@ server {
     # API reverse proxy: /api/* -> <backend>/* (same origin in production).
     # API_UPSTREAM points at the separately-deployed backend (e.g.
     # https://mini-shop-api-production-d245.up.railway.app); the /api prefix is stripped.
-    location /api/ {
+    # ^~ forces this prefix to win over the hashed-asset regex locations below,
+    # so /api/storage/*.png (product images) are proxied too.
+    location ^~ /api/ {
         resolver ${RESOLVER_ADDR} valid=30s ipv6=off;
         rewrite ^/api/(.*)$ /$1 break;
         proxy_pass $api_base;
