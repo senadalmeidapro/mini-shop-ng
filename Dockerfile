@@ -15,7 +15,7 @@ FROM nginx:1.27-alpine AS runtime
 # Railway injects PORT=8080 at runtime; 80 is the plain-Docker default.
 ENV PORT=80
 # Backend upstream for the /api reverse proxy (overridable at runtime).
-ENV API_UPSTREAM=http://backend.railway.internal:3000
+ENV API_UPSTREAM=https://mini-shop-api-production-d245.up.railway.app
 
 COPY nginx/docker-entrypoint-resolver.sh /usr/local/bin/start-resolver.sh
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template

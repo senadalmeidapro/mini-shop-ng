@@ -43,11 +43,9 @@ The app is a static SPA served by nginx. The **backend is deployed separately** 
 ### Railway
 
 1. Push the repository to GitHub, then on [Railway](https://railway.com) create a project and **Deploy from GitHub repo** (the `Dockerfile` is detected automatically).
-2. Set the environment variable on the frontend service to the **public URL of the separately-deployed backend**:
-
-   ```bash
-   API_UPSTREAM=https://<backend-yourapp>.up.railway.app
-   ```
+2. The container already defaults to the production backend:
+   `API_UPSTREAM=https://mini-shop-api-production-d245.up.railway.app`
+   (set the variable on the Railway service to override it, e.g. for a new deployment environment):
 
 3. Generate a public domain for the frontend under **Networking**.
 
