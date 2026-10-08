@@ -3,7 +3,7 @@ services:
     build: .
     image: mini-shop-ng:latest
     ports:
-      - '8080:80'
+      - '8080:8080'
     environment:
       # Public URL of the separately-deployed backend. On Railway, for instance:
       # API_UPSTREAM: https://<backend-yourapp>.up.railway.app

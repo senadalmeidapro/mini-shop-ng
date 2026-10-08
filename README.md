@@ -10,7 +10,7 @@ To start a local development server, run:
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Once the server is running, open your browser and navigate to `http://localhost:8080/`. The application will automatically reload whenever you modify any of the source files.
 
 ## Code scaffolding
 
@@ -51,7 +51,7 @@ The app is a static SPA served by nginx. The **backend is deployed separately** 
 
 Notes:
 
-- Railway injects `PORT` at runtime; nginx listens on `${PORT}` (`nginx/default.conf.template`).
+- The app listens on a **fixed port 8080** everywhere (nginx `listen 0.0.0.0:8080`, healthcheck, Docker Compose `8080:8080`, Angular dev server). It matches Railway's default `PORT`, so no networking configuration is needed.
 - `/api/*` is proxied to `API_UPSTREAM` (the `/api` prefix is stripped): `/api/products` → `https://<backend>.up.railway.app/products`. This keeps everything same-origin, so no CORS is needed.
 - DNS is resolved lazily at request time: the frontend starts even if the backend is not reachable yet, but API calls fail until the backend is up.
 - `railway.json` defines the healthcheck (`/`) and the restart policy.
@@ -60,7 +60,7 @@ Notes:
 
 ```bash
 docker build -t mini-shop-ng .
-docker run -d -p 8080:80 -e API_UPSTREAM=http://host.docker.internal:3000 mini-shop-ng
+docker run -d -p 8080:8080 -e API_UPSTREAM=http://host.docker.internal:3000 mini-shop-ng
 # or, with the backend configured in docker-compose.yml
 docker compose up --build   # app on http://localhost:8080
 ```

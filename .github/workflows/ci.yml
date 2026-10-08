@@ -41,7 +41,7 @@ jobs:
       - name: Smoke test nginx (SPA fallback + /api proxy)
         run: |
           docker run -d --name web -p 8080:8080 \
-            -e PORT=8080 -e API_UPSTREAM=http://backend.invalid:3000 \
+            -e API_UPSTREAM=http://backend.invalid:3000 \
             mini-shop-ng:ci
           sleep 5
           docker logs web

@@ -5,7 +5,7 @@
 **2 projets distincts** :
 
 - **Backend** — NestJS + TypeORM (SQLite) : API REST JSON sur `:3000`. JWT + Passport + guards RBAC. Sortie build : `dist/src/main.js`, watch mode + compilation TypeScript.
-- **Frontend** — Angular (signals, standalone components, lazy loading par route) : SPA sur `:4200`, proxy `/api` → `:3000`. Stores injectables par domaine (`*.store.ts`), interceptor HTTP de refresh token, toasts.
+- **Frontend** — Angular (signals, standalone components, lazy loading par route) : SPA sur `:8080`, proxy `/api` → `:3000`. Stores injectables par domaine (`*.store.ts`), interceptor HTTP de refresh token, toasts.
 
 **3 rôles** : `user` (client), `supplier` (fournisseur = propriétaire d'une boutique), `admin`. Les routes et endpoints sont protégés par guards côté front et par `@Roles()`/vérifications côté back.
 
