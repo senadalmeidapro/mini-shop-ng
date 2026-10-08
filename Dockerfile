@@ -18,7 +18,7 @@ ENV PORT=80
 ENV API_UPSTREAM=http://backend.railway.internal:3000
 
 COPY nginx/docker-entrypoint-resolver.sh /usr/local/bin/start-resolver.sh
-COPY nginx/default.conf.template /etc/nginx/temp lates/default.conf.template
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist/mini-shop-ng/browser /usr/share/nginx/html
 RUN chmod +x /usr/local/bin/start-resolver.sh
 
