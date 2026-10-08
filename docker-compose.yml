@@ -5,14 +5,15 @@ services:
     ports:
       - '8080:80'
     environment:
-      # Backend upstream for the /api reverse proxy. Use a Docker service
-      # name (http://backend:3000) or the host (http://host.docker.internal:3000).
-      # On Railway use the internal DNS: http://<backend-service>.railway.internal:3000
-      API_UPSTREAM: http://backend:3000
+      # Public URL of the separately-deployed backend. On Railway, for instance:
+      # API_UPSTREAM: https://<backend-yourapp>.up.railway.app
+      # Locally, a Docker service name or the host:
+      API_UPSTREAM: http://host.docker.internal:3000
     restart: unless-stopped
 
   # Your JSON Server backend lives in its own repository. Uncomment and adapt
-  # this service so `docker compose up` starts everything at once:
+  # this service so `docker compose up` starts everything at once (and set
+  # API_UPSTREAM above to http://backend:3000):
   #
   # backend:
   #   image: node:22-alpine

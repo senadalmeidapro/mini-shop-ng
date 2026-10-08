@@ -38,24 +38,24 @@ This will compile your project and store the build artifacts in the `dist/` dire
 
 ## Production deployment
 
-The app is a static SPA served by nginx, with the backend exposed on the **same origin under `/api`**. The multi-stage `Dockerfile` builds the app and serves it with nginx; `railway.json` configures the service.
+The app is a static SPA served by nginx. The **backend is deployed separately** (another Railway service, e.g. `/mini-shop-api`); nginx exposes it on the same origin under `/api` so the browser only talks to the frontend domain. The multi-stage `Dockerfile` builds the app and serves it with nginx; `railway.json` configures the service.
 
 ### Railway
 
 1. Push the repository to GitHub, then on [Railway](https://railway.com) create a project and **Deploy from GitHub repo** (the `Dockerfile` is detected automatically).
-2. Set the environment variable for the `/api` reverse proxy on the frontend service, pointing at your backend service:
+2. Set the environment variable on the frontend service to the **public URL of the separately-deployed backend**:
 
    ```bash
-   API_UPSTREAM=http://<backend-service>.railway.internal:3000
+   API_UPSTREAM=https://<backend-yourapp>.up.railway.app
    ```
 
-3. Generate a public domain under **Networking**.
+3. Generate a public domain for the frontend under **Networking**.
 
 Notes:
 
 - Railway injects `PORT` at runtime; nginx listens on `${PORT}` (`nginx/default.conf.template`).
-- `/api/*` is proxied to `API_UPSTREAM` (the `/api` prefix is stripped), so the frontend and backend share one origin.
-- DNS is resolved lazily at request time: the frontend starts even if the backend is not up yet, but API calls fail until the backend exists.
+- `/api/*` is proxied to `API_UPSTREAM` (the `/api` prefix is stripped): `/api/products` → `https://<backend>.up.railway.app/products`. This keeps everything same-origin, so no CORS is needed.
+- DNS is resolved lazily at request time: the frontend starts even if the backend is not reachable yet, but API calls fail until the backend is up.
 - `railway.json` defines the healthcheck (`/`) and the restart policy.
 
 ### Local Docker / Compose
