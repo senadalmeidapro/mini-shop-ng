@@ -15,16 +15,17 @@
 .ad-revenue__value {
   display: block;
   margin-top: 0.15rem;
-  font-size: 1.75rem;
+  font-size: clamp(1.35rem, 1rem + 1.6vw, 1.75rem);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--color-heading);
+  overflow-wrap: anywhere;
 }
 
 .ad-metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
   gap: 0.75rem;
   padding-top: 1rem;
   border-top: 1px solid var(--color-border);

@@ -10,10 +10,12 @@
  * ------------------------------------------------------------------ */
 
 .saas {
+  --saas-sidebar-w: 248px;
   display: grid;
-  grid-template-columns: var(--saas-sidebar-w, 248px) minmax(0, 1fr);
+  grid-template-columns: var(--saas-sidebar-w) minmax(0, 1fr);
   min-height: 100vh;
   background: var(--color-background-soft);
+  transition: grid-template-columns var(--duration) var(--ease-out);
 }
 
 .saas--collapsed {
@@ -28,6 +30,7 @@
   gap: 1rem;
   height: 100vh;
   padding: 1.1rem 0.85rem;
+  padding-bottom: calc(1.1rem + env(safe-area-inset-bottom, 0px));
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
   overflow: hidden auto;
@@ -174,8 +177,8 @@
   z-index: 20;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.85rem clamp(1rem, 2.4vw, 1.9rem);
+  gap: 0.75rem;
+  padding: 0.85rem clamp(0.85rem, 2.4vw, 1.9rem);
   background: color-mix(in srgb, var(--color-background) 88%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
@@ -212,7 +215,9 @@
 
 .saas__content {
   flex: 1;
-  padding: clamp(1rem, 2.4vw, 1.9rem);
+  min-width: 0;
+  padding: clamp(0.85rem, 2.4vw, 1.9rem);
+  padding-bottom: calc(clamp(0.85rem, 2.4vw, 1.9rem) + env(safe-area-inset-bottom, 0px));
 }
 
 .saas__content > * + * {
@@ -302,6 +307,64 @@
   display: none;
 }
 
+/* ------------------------------------------------------------------ *
+ * Rail replié (desktop) : uniquement les icônes + infobulles
+ * ------------------------------------------------------------------ */
+
+@media (min-width: 1025px) {
+  .saas--collapsed .saas__brand {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .saas--collapsed .saas__brand-text,
+  .saas--collapsed .saas__nav-label,
+  .saas--collapsed .saas__nav-link > span,
+  .saas--collapsed .saas__user-meta {
+    display: none;
+  }
+
+  .saas--collapsed .saas__nav-link {
+    justify-content: center;
+    padding-inline: 0.5rem;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Topbar compact (tablette + mobile)
+ * ------------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+  .saas__topbar-title p {
+    display: none;
+  }
+
+  .saas__topbar-title h1 {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .saas__topbar {
+    gap: 0.5rem;
+  }
+
+  .saas__user {
+    padding: 0.2rem;
+    border: 0;
+    background: transparent;
+  }
+
+  .saas__user-meta,
+  .saas__icon-btn--shortcut {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Tiroir mobile (<= 1024px) : la sidebar devient un panneau coulissant
+ * ------------------------------------------------------------------ */
+
 @media (max-width: 1024px) {
   .saas {
     grid-template-columns: minmax(0, 1fr);
@@ -311,13 +374,20 @@
     position: fixed;
     inset: 0 auto 0 0;
     z-index: 50;
-    width: 260px;
-    transform: translateX(-100%);
-    transition: transform var(--duration) var(--ease-out);
+    width: min(84vw, 300px);
+    transform: translateX(-102%);
+    visibility: hidden;
+    transition:
+      transform var(--duration) var(--ease-out),
+      visibility 0s linear var(--duration);
   }
 
   .saas--open .saas__sidebar {
     transform: none;
+    visibility: visible;
+    transition:
+      transform var(--duration) var(--ease-out),
+      visibility 0s linear 0s;
     box-shadow: var(--shadow-xl);
   }
 
@@ -331,24 +401,9 @@
     cursor: pointer;
   }
 
-  .saas--collapsed .saas__sidebar {
-    width: 260px;
-  }
-
-  .saas--collapsed .saas__brand-text,
-  .saas--collapsed .saas__nav-label,
-  .saas--collapsed .saas__nav-link span,
-  .saas--collapsed .saas__user-meta {
-    display: revert;
-  }
-}
-
-@media (min-width: 1025px) and (max-width: 1180px) {
-  .saas--collapsed .saas__brand-text,
-  .saas--collapsed .saas__nav-label,
-  .saas--collapsed .saas__nav-link span,
-  .saas--collapsed .saas__user-meta {
-    display: none;
+  /* Le tiroir ouvert ne doit pas faire défiler la page derrière. */
+  body:has(.saas--open) {
+    overflow: hidden;
   }
 }
 
@@ -445,7 +500,7 @@
 
 .saas-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
   gap: 0.85rem;
 }
 
@@ -499,10 +554,8 @@
   font-size: 0.76rem;
   font-weight: 500;
   color: var(--color-text-soft);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-left: 10px;
 }
 
 .saas-stat__hint {
@@ -565,6 +618,17 @@
 .saas-toolbar__search input {
   width: 100%;
   padding-left: 2.1rem;
+}
+
+@media (max-width: 560px) {
+  .saas-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .saas-toolbar__search {
+    flex-basis: auto;
+  }
 }
 
 /* ------------------------------------------------------------------ *
@@ -757,6 +821,8 @@
 .saas-table-wrap {
   width: 100%;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .saas-table {
@@ -805,11 +871,19 @@
   border-bottom: 0;
 }
 
+@media (max-width: 640px) {
+  .saas-table th,
+  .saas-table td {
+    padding: 0.55rem 0.75rem;
+  }
+}
+
 .saas-table__actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 0.3rem;
+  flex-wrap: wrap;
 }
 
 .saas-cell-strong {
@@ -874,6 +948,13 @@
   color: var(--color-text-soft);
 }
 
+.saas-input--sm {
+  width: auto;
+  min-width: 5.5rem;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.78rem;
+}
+
 .saas-input:hover,
 .saas-select:hover,
 .saas-textarea:hover {
@@ -921,7 +1002,7 @@
 
 .saas-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 0.9rem;
 }
 
@@ -931,6 +1012,12 @@
   gap: 0.55rem;
   flex-wrap: wrap;
   padding-top: 0.35rem;
+}
+
+@media (max-width: 480px) {
+  .saas-form-actions .saas-btn {
+    flex: 1 1 auto;
+  }
 }
 
 /* ------------------------------------------------------------------ *
@@ -1109,6 +1196,20 @@
   gap: 0.5rem;
 }
 
+@media (max-width: 480px) {
+  .saas-modal__panel {
+    padding: 1.15rem;
+  }
+
+  .saas-modal__actions {
+    flex-direction: column-reverse;
+  }
+
+  .saas-modal__actions .saas-btn {
+    width: 100%;
+  }
+}
+
 .saas-spinner {
   display: inline-block;
   flex: 0 0 auto;
@@ -1187,13 +1288,13 @@
 
 .saas-grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 0.9rem;
 }
 
 .saas-grid-3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   gap: 0.9rem;
 }
 
@@ -1204,7 +1305,7 @@
   align-items: start;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .saas-split {
     grid-template-columns: minmax(0, 1fr);
   }

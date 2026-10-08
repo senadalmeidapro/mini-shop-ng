@@ -172,7 +172,7 @@
         </svg>
       </span>
       <span class="saas-stat__body">
-        <span class="saas-stat__value">{{ data.notifications.unread }}</span> <br>
+        <span class="saas-stat__value">{{ data.notifications.unread }}</span> <br />
         <span class="saas-stat__label">Notifications non lues</span>
       </span>
     </div>
@@ -247,7 +247,7 @@
       </div>
     </section>
 
-    <div style="display: grid; gap: 1.15rem">
+    <div class="sd__side">
       <section class="saas-card">
         <div class="saas-card__head">
           <h3>Stocks critiques</h3>
@@ -258,7 +258,7 @@
 
         <div class="saas-card__body saas-card__body--flush">
           @if (data.products.lowStock.length === 0) {
-            <p class="saas-empty__text" style="padding: 1.1rem">Tout est approvisionné.</p>
+            <p class="saas-empty__text sd__note">Tout est approvisionné.</p>
           } @else {
             <ul class="sd__list">
               @for (product of data.products.lowStock; track product.id) {

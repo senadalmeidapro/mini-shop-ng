@@ -4,8 +4,8 @@
   z-index: 40;
   display: flex;
   align-items: center;
-  gap: 1.75rem;
-  padding: 0.7rem 1.5rem;
+  gap: clamp(0.75rem, 2vw, 1.75rem);
+  padding: 0.7rem clamp(0.85rem, 3vw, 1.5rem);
   background: var(--color-background);
   border-bottom: 1px solid var(--color-border);
 }
@@ -47,7 +47,9 @@
 
 .nav__links {
   display: flex;
-  gap: 1.35rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1.35rem;
 }
 
 .nav__link {

@@ -31,6 +31,7 @@
           routerLink="/supplier"
           routerLinkActive="saas__nav-link--active"
           [routerLinkActiveOptions]="{ exact: true }"
+          title="Tableau de bord"
           (click)="closeMobile()"
         >
           <svg viewBox="0 0 20 20" width="17" height="17" fill="currentColor" aria-hidden="true">
@@ -48,6 +49,7 @@
           class="saas__nav-link"
           routerLink="/supplier/products"
           routerLinkActive="saas__nav-link--active"
+          title="Mes produits"
           (click)="closeMobile()"
         >
           <svg viewBox="0 0 20 20" width="17" height="17" fill="currentColor" aria-hidden="true">
@@ -63,6 +65,7 @@
           class="saas__nav-link"
           routerLink="/supplier/orders"
           routerLinkActive="saas__nav-link--active"
+          title="Commandes reçues"
           (click)="closeMobile()"
         >
           <svg viewBox="0 0 20 20" width="17" height="17" fill="currentColor" aria-hidden="true">
@@ -78,7 +81,7 @@
     </nav>
 
     <div class="saas__sidebar-foot">
-      <a routerLink="/" class="saas__nav-link" (click)="closeMobile()">
+      <a routerLink="/" class="saas__nav-link" title="Voir la boutique" (click)="closeMobile()">
         <svg viewBox="0 0 20 20" width="17" height="17" fill="currentColor" aria-hidden="true">
           <path d="M8.5 3a.5.5 0 0 1 .8-.4l7 5.5a.5.5 0 0 1 0 .8l-7 5.5a.5.5 0 0 1-.8-.4V3Z" />
         </svg>
@@ -92,22 +95,34 @@
       <button
         type="button"
         class="saas__toggle saas__toggle--menu"
+        [attr.aria-expanded]="mobileOpen()"
         aria-label="Ouvrir le menu"
         (click)="toggleMobile()"
       >
-        <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor" aria-hidden="true">
-          <path
-            fill-rule="evenodd"
-            d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"
-            clip-rule="evenodd"
-          />
-        </svg>
+        @if (mobileOpen()) {
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="M5.72 5.72a.75.75 0 0 1 1.06 0L10 8.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L11.06 10l3.22 3.22a.75.75 0 1 1-1.06 1.06L10 11.06l-3.22 3.22a.75.75 0 0 1-1.06-1.06L8.94 10 5.72 6.78a.75.75 0 0 1 0-1.06Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        }
       </button>
 
       <button
         type="button"
         class="saas__toggle saas__toggle--collapse"
-        aria-label="Réduire le menu"
+        [attr.aria-expanded]="!collapsed()"
+        [attr.aria-label]="collapsed() ? 'Déplier le menu' : 'Réduire le menu'"
         (click)="toggleCollapsed()"
       >
         <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor" aria-hidden="true">
@@ -125,7 +140,12 @@
       </div>
 
       <div class="saas__topbar-actions">
-        <a routerLink="/orders" class="saas__icon-btn" aria-label="Mes commandes">
+        <a
+          routerLink="/supplier/orders"
+          class="saas__icon-btn saas__icon-btn--shortcut"
+          aria-label="Mes commandes"
+          title="Mes commandes"
+        >
           <svg viewBox="0 0 20 20" width="17" height="17" fill="currentColor" aria-hidden="true">
             <path
               fill-rule="evenodd"
@@ -135,13 +155,31 @@
           </svg>
         </a>
 
-        <a routerLink="/profile" class="saas__user">
-          <!-- <span class="saas-avatar saas-avatar--sm">{{ initials() }}</span> -->
+        <a routerLink="/profile" class="saas__user" title="Mon profil">
+          <span class="saas-avatar saas-avatar--sm" aria-hidden="true">{{ initials() }}</span>
           <span class="saas__user-meta">
             <strong>{{ user()?.fullName ?? 'Vendeur' }}</strong>
             <span>{{ role() }}</span>
           </span>
         </a>
+
+        <button
+          type="button"
+          class="saas__icon-btn"
+          aria-label="Se déconnecter"
+          (click)="signOut()"
+        >
+          <svg viewBox="0 0 20 20" width="17" height="17" fill="currentColor" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="M8.34 2.6a1 1 0 0 1 0-1.2A1 1 0 0 1 9.6 1.1l6 3.4a1 1 0 0 1 0 1.7l-6 3.4a1 1 0 0 1-1.34-.9V6.5H4.5A1.5 1.5 0 0 0 3 8v7a1.5 1.5 0 0 0 1.5 1.5h4.26a1 1 0 1 1 0 2H4.5A3.5 3.5 0 0 1 1 15V8a3.5 3.5 0 0 1 3.5-3.5h3.84V2.6Z"
+              clip-rule="evenodd"
+            />
+            <path
+              d="M14.5 7a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 14.5 7Z"
+            />
+          </svg>
+        </button>
       </div>
     </header>
 
